@@ -1,6 +1,7 @@
 package com.example.wanandroid.base
 
 import androidx.lifecycle.viewModelScope
+import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
