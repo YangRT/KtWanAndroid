@@ -42,10 +42,14 @@ fun getUserInfo():String?{
     return sharedPreferences.getString("user",null)
 }
 
-fun  <T> getData(key:String,type:Type):T?{
+fun  <T> getDataFromJson(key:String,type:Type):T?{
     val data = getSaveData(key)
     if(data != null){
         return Gson().fromJson(data,type)
     }
     return null
+}
+
+fun <T> toJson(data: T):String{
+    return Gson().toJson(data)
 }
