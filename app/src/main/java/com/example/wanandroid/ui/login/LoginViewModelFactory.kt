@@ -2,7 +2,7 @@ package com.example.wanandroid.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.wanandroid.data.LoginRegisterRepository
+import com.example.wanandroid.repository.LoginRegisterRepository
 
 class LoginViewModelFactory(private val loginRegisterRepository: LoginRegisterRepository):
     ViewModelProvider.NewInstanceFactory(){

@@ -1,4 +1,4 @@
-package com.example.wanandroid.data
+package com.example.wanandroid.repository
 
 import com.example.wanandroid.data.network.WanNetwork
 import kotlinx.coroutines.Dispatchers

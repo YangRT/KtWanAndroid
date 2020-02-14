@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wanandroid.MyApplication
-import com.example.wanandroid.data.LoginRegisterRepository
+import com.example.wanandroid.repository.LoginRegisterRepository
 import com.example.wanandroid.data.model.ResponseInfo
 import kotlinx.coroutines.launch
 
