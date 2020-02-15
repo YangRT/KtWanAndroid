@@ -1,6 +1,10 @@
 package com.example.wanandroid.base
 
 import androidx.lifecycle.viewModelScope
+import com.example.wanandroid.util.getDataFromJson
+import com.example.wanandroid.util.saveData
+import com.example.wanandroid.util.saveTime
+import com.example.wanandroid.util.toJson
 import com.google.gson.Gson
 import kotlinx.coroutines.launch
 import retrofit2.Call
@@ -36,23 +40,39 @@ public abstract class BaseMvvmRepository<T>(var isPaging:Boolean,var key:String?
     protected var isRefreshing = false
 
 
-    protected fun saveDataToPreference(data:T?){
+    protected fun saveDataToPreference(data:T){
         //保存数据
+        val str = toJson(data)
+        saveData(str,mCachedPreferenceKey!!)
+        saveTime(System.currentTimeMillis(),mCachedPreferenceKey!!)
     }
 
-    suspend fun getCachedDataAndLoad(){
+    public suspend fun getCacheData():BaseResult<T>{
+       var result:BaseResult<T> = BaseResult()
         if(mCachedPreferenceKey != null){
-            //获取数据
-        }else{
+            //获取缓存数据
+             var data = getTClass()?.let { getDataFromJson<T>(mCachedPreferenceKey!!, it) }
+             result.data = data
+             result.isFirst = true
+             result.isEmpty = data==null
+             result.isHasNextPage = isPaging
 
+        }else{
+            result = load()
         }
-        load()
+        return result
     }
 
-    abstract suspend fun load():T
-    abstract fun refresh()
+    suspend fun requestData():BaseResult<T>{
+        return load()
+    }
 
-    protected fun isNeedToUpdate():Boolean{
+    abstract suspend fun load():BaseResult<T>
+
+
+    abstract suspend fun refresh():BaseResult<T>
+
+    public fun isNeedToUpdate():Boolean{
         return true
     }
 
@@ -60,20 +80,6 @@ public abstract class BaseMvvmRepository<T>(var isPaging:Boolean,var key:String?
         return null;
     }
 
-    private suspend fun <T> Call<T>.await(): T {
-        return suspendCoroutine { continuation ->
-            enqueue(object : Callback<T> {
-                override fun onFailure(call: Call<T>, t: Throwable) {
-                    continuation.resumeWithException(t)
-                }
 
-                override fun onResponse(call: Call<T>, response: Response<T>) {
-                    val body = response.body()
-                    if (body != null) continuation.resume(body)
-                    else continuation.resumeWithException(RuntimeException("response body is null"))
-                }
-            })
-        }
-    }
 
 }
