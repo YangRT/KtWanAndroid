@@ -16,6 +16,7 @@ class BaseResult<T> {
     var data:T? = null
     var isFirst :Boolean= false
     var isEmpty : Boolean = false
-    var isHasNextPage : Boolean = false
+    var isFromCache:Boolean = false
+    var isPaging:Boolean = false
     var msg:String? = null
 }

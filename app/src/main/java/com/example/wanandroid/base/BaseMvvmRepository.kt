@@ -51,12 +51,12 @@ public abstract class BaseMvvmRepository<T>(var isPaging:Boolean,var key:String?
        var result:BaseResult<T> = BaseResult()
         if(mCachedPreferenceKey != null){
             //获取缓存数据
-             var data = getTClass()?.let { getDataFromJson<T>(mCachedPreferenceKey!!, it) }
-             result.data = data
-             result.isFirst = true
-             result.isEmpty = data==null
-             result.isHasNextPage = isPaging
-
+            var data = getTClass()?.let { getDataFromJson<T>(mCachedPreferenceKey!!, it) }
+            result.data = data
+            result.isFirst = true
+            result.isEmpty = data==null
+            result.isFromCache = true
+            result.isPaging = isPaging
         }else{
             result = load()
         }
