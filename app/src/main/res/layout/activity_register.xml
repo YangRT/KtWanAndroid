@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.login.LoginActivity">
     <TextView
-        android:layout_marginTop="80dp"
+        android:layout_marginTop="40dp"
         android:textColor="#03A9F4"
         android:typeface="serif"
         android:textStyle="italic"
@@ -26,10 +26,10 @@
     <com.google.android.material.textfield.TextInputLayout
         android:theme="@style/CustomLineTheme"
         app:hintTextAppearance="@style/hintAppearance"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="8dp"
         android:layout_gravity="center"
         android:layout_width="320dp"
-        android:layout_height="60dp">
+        android:layout_height="80dp">
         <EditText
             android:id="@+id/edit_username"
             android:maxLines="1"
@@ -43,9 +43,9 @@
         app:hintTextAppearance="@style/hintAppearance"
         android:layout_gravity="center"
         app:passwordToggleEnabled="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="26dp"
         android:layout_width="320dp"
-        android:layout_height="60dp">
+        android:layout_height="80dp">
         <EditText
             android:id="@+id/edit_password"
             android:maxLines="1"
@@ -60,9 +60,9 @@
         app:hintTextAppearance="@style/hintAppearance"
         android:layout_gravity="center"
         app:passwordToggleEnabled="true"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="26dp"
         android:layout_width="320dp"
-        android:layout_height="60dp">
+        android:layout_height="80dp">
         <EditText
             android:id="@+id/edit_re_password"
             android:maxLines="1"
@@ -76,7 +76,7 @@
         android:id="@+id/bt_register"
         android:text="@string/register"
         android:textSize="18sp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="26dp"
         android:layout_gravity="center"
         android:background="#03A9F4"
         android:layout_width="320dp"

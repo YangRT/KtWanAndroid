@@ -12,9 +12,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ui.home.HomeActivity"></activity>
+        <activity android:name=".ui.mine.todo.TodoDetailActivity"></activity>
+        <activity android:name=".ui.mine.todo.TodoActivity" />
+        <activity android:name=".base.BaseListActivity" />
+        <activity android:name=".ArticleActivity" />
+        <activity android:name=".ui.home.HomeActivity" />
         <activity android:name=".ui.register.RegisterActivity" />
-        <activity android:name=".ui.login.LoginActivity"></activity>
+        <activity android:name=".ui.login.LoginActivity" />
         <activity android:name=".SplashActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

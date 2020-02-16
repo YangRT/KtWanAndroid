@@ -9,7 +9,7 @@
             android:layout_height="match_parent"
             tools:context=".ui.login.LoginActivity">
         <TextView
-                android:layout_marginTop="80dp"
+                android:layout_marginTop="60dp"
                 android:textColor="#03A9F4"
                 android:typeface="serif"
                 android:textStyle="italic"
@@ -29,7 +29,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_gravity="center"
                 android:layout_width="320dp"
-                android:layout_height="60dp">
+                android:layout_height="80dp">
             <EditText
                     android:id="@+id/edit_username"
                     android:maxLines="1"
@@ -45,7 +45,7 @@
                 app:passwordToggleEnabled="true"
                 android:layout_marginTop="30dp"
                 android:layout_width="320dp"
-                android:layout_height="60dp">
+                android:layout_height="80dp">
             <EditText
                     android:id="@+id/edit_password"
                     android:maxLines="1"
