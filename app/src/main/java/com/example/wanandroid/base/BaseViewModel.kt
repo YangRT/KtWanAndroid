@@ -75,7 +75,7 @@ class BaseViewModel<D,M : BaseMvvmRepository<List<D>>>:ViewModel(), LifecycleObs
             },{
                 refresh.value = false
                 Log.e("BaseViewModel",it.message)
-                Toast.makeText(MyApplication.context,"刷新失败，网络错误！",Toast.LENGTH_SHORT).show()
+                status.postValue(PageStatus.REFRESH_ERROR)
             })
         }
 
