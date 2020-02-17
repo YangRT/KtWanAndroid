@@ -10,10 +10,8 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
-import androidx.annotation.StringRes
 import com.example.wanandroid.R
 import kotlinx.android.synthetic.main.search_view.view.*
-
 
 /**
  * @program: WanAndroid
@@ -27,8 +25,6 @@ import kotlinx.android.synthetic.main.search_view.view.*
 
 class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):LinearLayout(context,attributeSet,defStyleAttr){
 
-
-
     private lateinit var baseAdapter:BaseAdapter
 
     private var recordSQLHelper: RecordSQLHelper = RecordSQLHelper(context)
@@ -37,9 +33,6 @@ class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleA
     private var bCallBack:BCallBack? = null
     private var sCallBack:SCallBack? = null
 
-    private var textSize:Float = 0f
-    private var textColor:Int = 0
-    private var hintText:String? = null
 
     init {
         init()
@@ -53,36 +46,36 @@ class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleA
          * "清空搜索历史"按钮
          */
         tv_clear.setOnClickListener {
-            deleteData();
-            queryData("");
-        };
+            deleteData()
+            queryData("")
+        }
 
         /**
          * 监听输入键盘更换后的搜索按键
          * 调用时刻：点击键盘上的搜索键时
          */
-        edit_search.setOnKeyListener { v, keyCode, event ->
-            if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_DOWN) {
+        edit_search.setOnKeyListener { _, keyCode, event ->
+            if (keyCode == KeyEvent.KEYCODE_ENTER && event.action == KeyEvent.ACTION_DOWN) {
                 if(edit_search.text.toString() == ""){
-                    Toast.makeText(context, "搜索不能为空", Toast.LENGTH_SHORT).show();
-                    return@setOnKeyListener true;
+                    Toast.makeText(context, "搜索不能为空", Toast.LENGTH_SHORT).show()
+                    return@setOnKeyListener true
                 }
 
-                sCallBack?.searchAction(edit_search.getText().toString())
-                Toast.makeText(context, "需要搜索的是" + edit_search.getText(), Toast.LENGTH_SHORT).show();
+                sCallBack?.searchAction(edit_search.text.toString())
+                Toast.makeText(context, "需要搜索的是" + edit_search.text, Toast.LENGTH_SHORT).show()
 
                 // 2. 点击搜索键后，对该搜索字段在数据库是否存在进行检查（查询）->> 关注1
-                val hasData = hasData(edit_search.getText().toString().trim());
+                val hasData = hasData(edit_search.text.toString().trim())
                 // 3. 若存在，则不保存；若不存在，则将该搜索字段保存（插入）到数据库，并作为历史搜索记录
                 if (!hasData) {
-                    insertData(edit_search.text.toString().trim());
-                    queryData("");
+                    insertData(edit_search.text.toString().trim())
+                    queryData("")
                 }
-                edit_search.setText("");
-                return@setOnKeyListener true;
+                edit_search.setText("")
+                return@setOnKeyListener true
             }
-            return@setOnKeyListener false;
-        };
+            return@setOnKeyListener false
+        }
 
         edit_search.backListener = object :SearchEditText.BackListener{
             override fun back() {
@@ -93,8 +86,7 @@ class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleA
         edit_search.addTextChangedListener(object :TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 // 每次输入后，模糊查询数据库 & 显示
-                val tempName = edit_search.text.toString();
-                queryData(tempName);
+                queryData(edit_search.text.toString())
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -111,27 +103,27 @@ class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleA
          */
         history_listview.setOnItemClickListener { parent, view, position, id ->
             val textView =  view.findViewById<TextView>(android.R.id.text1)
-            val name = textView.text.toString();
-            edit_search.setText(name);
-            Toast.makeText(context, name, Toast.LENGTH_SHORT).show();
+            val name = textView.text.toString()
+            edit_search.setText(name)
+            Toast.makeText(context, name, Toast.LENGTH_SHORT).show()
         }
 
         image_search.setOnClickListener {
-            if(edit_search.text.toString().equals("")){
-                Toast.makeText(context, "搜索不能为空", Toast.LENGTH_SHORT).show();
+            if(edit_search.text.toString() == ""){
+                Toast.makeText(context, "搜索不能为空", Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
-            sCallBack?.searchAction(edit_search.getText().toString());
-            Toast.makeText(context, "需要搜索的是" + edit_search.getText(), Toast.LENGTH_SHORT).show();
+            sCallBack?.searchAction(edit_search.text.toString())
+            Toast.makeText(context, "需要搜索的是" + edit_search.text, Toast.LENGTH_SHORT).show()
 
             // 2. 点击搜索键后，对该搜索字段在数据库是否存在进行检查（查询）->> 关注1
-            val hasData = hasData(edit_search.getText().toString().trim());
+            val hasData = hasData(edit_search.text.toString().trim())
             // 3. 若存在，则不保存；若不存在，则将该搜索字段保存（插入）到数据库，并作为历史搜索记录
             if (!hasData) {
-                insertData(edit_search.getText().toString().trim());
-                queryData("");
+                insertData(edit_search.text.toString().trim())
+                queryData("")
             }
-            edit_search.setText("");
+            edit_search.setText("")
         }
     }
 
@@ -151,37 +143,37 @@ class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleA
         val cursor = recordSQLHelper.readableDatabase.rawQuery("select id as _id,name from records where name like '%$str%' order by id desc ", null)
 
         baseAdapter = SimpleCursorAdapter(context, android.R.layout.simple_list_item_1, cursor,
-           arrayOf<String>("name"), intArrayOf(android.R.id.text1 ), CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
+           arrayOf("name"), intArrayOf(android.R.id.text1 ), CursorAdapter.FLAG_REGISTER_CONTENT_OBSERVER)
         history_listview.adapter = baseAdapter
         baseAdapter.notifyDataSetChanged()
         if (str == "" && cursor.count != 0){
-            tv_clear.visibility = VISIBLE;
+            tv_clear.visibility = VISIBLE
         }
         else {
-            tv_clear.visibility = INVISIBLE;
-        };
+            tv_clear.visibility = INVISIBLE
+        }
     }
 
     private fun deleteData(){
-        db = recordSQLHelper.writableDatabase;
-        db.execSQL("delete from records");
-        db.close();
-        tv_clear.visibility = INVISIBLE;
+        db = recordSQLHelper.writableDatabase
+        db.execSQL("delete from records")
+        db.close()
+        tv_clear.visibility = INVISIBLE
     }
 
     private fun hasData(str:String):Boolean{
         val cursor = recordSQLHelper.readableDatabase.rawQuery(
-            "select id as _id,name from records where name =?", arrayOf(str));
+            "select id as _id,name from records where name =?", arrayOf(str))
         //  判断是否有下一个
-        var result = cursor.moveToNext()
+        val result = cursor.moveToNext()
         cursor.close()
-        return result;
+        return result
     }
 
     private fun insertData(str:String){
-        db = recordSQLHelper.writableDatabase;
-        db.execSQL("insert into records(name) values('$str')");
-        db.close();
+        db = recordSQLHelper.writableDatabase
+        db.execSQL("insert into records(name) values('$str')")
+        db.close()
     }
 
 }

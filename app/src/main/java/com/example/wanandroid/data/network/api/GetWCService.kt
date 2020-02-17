@@ -1,15 +1,14 @@
 package com.example.wanandroid.data.network.api
 
 import com.example.wanandroid.data.model.ArticleInfo
-import com.example.wanandroid.data.model.ResponseInfo
-import com.example.wanandroid.data.model.WCListInfo
+import com.example.wanandroid.data.model.GzhListInfo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
 interface GetWCService {
     @GET("/wxarticle/chapters/json")
-    fun getWCListInfo(): Call<WCListInfo>
+    fun getWCListInfo(): Call<GzhListInfo>
 
     @GET("/wxarticle/list/{id}/{page}/json")
     fun getWCArticlesById(@Path("id")id:Int,@Path("page")page:Int):Call<ArticleInfo>
