@@ -19,5 +19,6 @@ enum class PageStatus {
     NO_MORE_DATA,
     REFRESH_ERROR,
     LOAD_MORE_FAILED,
-    REQUEST_ERROR
+    REQUEST_ERROR,
+    NETWORK_ERROR
 }

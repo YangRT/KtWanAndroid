@@ -63,7 +63,7 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
             Log.e("BaseViewModel",it.message+"requestData")
             isFirst = false
             if (data.value?.size == 0){
-                status.postValue(PageStatus.EMPTY)
+                status.postValue(PageStatus.NETWORK_ERROR)
             }
             Toast.makeText(MyApplication.context,"网络错误！",Toast.LENGTH_SHORT).show()
         })

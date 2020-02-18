@@ -1,6 +1,5 @@
 package com.example.wanandroid.base
 
-import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -12,6 +11,8 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import com.drake.statelayout.StateLayout
+import com.drake.statelayout.state
 import com.example.wanandroid.R
 import com.f1reking.library.statuslayout.StatusClickListener
 import com.f1reking.library.statuslayout.StatusLayout
@@ -33,7 +34,7 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
     protected var viewModel:VM? = null
     protected lateinit var binding:T
     //protected lateinit var statusLayout: StatusLayout
-
+    protected lateinit var state: StateLayout
 
     abstract fun getLayoutId():Int
     abstract fun viewModel():VM
@@ -76,6 +77,12 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
 //                }
 //            })
 //            .build()
+        state = state()
+        state.onRefresh {
+            // 一般在这里进行网络请求
+            viewModel().refresh
+
+        }.showLoading()
         viewModel().status.observe(this,this)
         viewModel().data.observe(this,
             Observer<ObservableArrayList<D>> { dataInsert(it)})
@@ -88,9 +95,11 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
             when(t){
                 PageStatus.LOADING -> {
                     //statusLayout.showLoadingLayout()
+                    state.showLoading()
                     }
                 PageStatus.SHOW_CONTENT -> {
                     //statusLayout.showContentLayout()
+                    state.showContent()
                     if(isRefreshing()){
                         Toast.makeText(context,"刷新成功！",Toast.LENGTH_SHORT).show();
                         refreshCancel()
@@ -100,12 +109,13 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
                 PageStatus.EMPTY -> {
                     Log.e("BaseFragment","Empty")
                     //statusLayout.showEmptyLayout()
+                    state.showEmpty()
                 }
                 PageStatus.NO_MORE_DATA -> loadMoreEmpty()
                 PageStatus.LOAD_MORE_FAILED -> loadMoreFailed()
                 PageStatus.REFRESH_ERROR -> Toast.makeText(context,"刷新失败！",Toast.LENGTH_SHORT).show()
                 PageStatus.REQUEST_ERROR -> Toast.makeText(context,"请求失败,请检查网络！",Toast.LENGTH_SHORT).show();
-
+                PageStatus.NETWORK_ERROR -> state.showError()
             }
         }
     }
