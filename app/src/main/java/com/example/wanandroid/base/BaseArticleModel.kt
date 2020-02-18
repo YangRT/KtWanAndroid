@@ -16,6 +16,7 @@ import com.chad.library.adapter.base.entity.MultiItemEntity
 class BaseArticleModel(type:Int):MultiItemEntity{
 
     lateinit var title:String
+    var author:String? = null
     lateinit var time:String
     lateinit var link:String
     var type:Int = type

@@ -1,5 +1,6 @@
 package com.example.wanandroid.base
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.example.wanandroid.util.getDataFromJson
 import com.example.wanandroid.util.saveData
@@ -26,7 +27,7 @@ import kotlin.coroutines.suspendCoroutine
  * @create: 2020-02-12 21:52
  **/
 
-public abstract class BaseMvvmRepository<T>(var isPaging:Boolean,var key:String?,var data:String?) {
+ abstract class BaseMvvmRepository<T>(var isPaging:Boolean,var key:String?,var data:String?) {
 
     private  val TAG = "BaseMvvmRepository"
 
@@ -48,7 +49,8 @@ public abstract class BaseMvvmRepository<T>(var isPaging:Boolean,var key:String?
     }
 
     public suspend fun getCacheData():BaseResult<T>{
-       var result:BaseResult<T> = BaseResult()
+        Log.e("BaseMvvmRepository","change")
+        var result:BaseResult<T> = BaseResult()
         if(mCachedPreferenceKey != null){
             //获取缓存数据
             var data = getTClass()?.let { getDataFromJson<T>(mCachedPreferenceKey!!, it) }

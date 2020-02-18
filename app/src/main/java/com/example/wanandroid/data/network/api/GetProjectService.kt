@@ -19,5 +19,5 @@ import retrofit2.http.Path
 interface GetProjectService {
 
     @GET("article/listproject/{path}/json")
-    fun GetProjectInfo(@Path("page")page:Int): Call<ArticleInfo>
+    fun GetProjectInfo(@Path("path")page:Int): Call<ArticleInfo>
 }

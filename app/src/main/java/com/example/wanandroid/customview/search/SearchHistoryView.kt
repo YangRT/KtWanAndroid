@@ -3,7 +3,6 @@ package com.example.wanandroid.customview.search
 import android.content.Context
 import android.util.AttributeSet
 import android.widget.ListView
-import androidx.core.widget.ListViewCompat
 
 
 /**

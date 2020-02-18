@@ -2,6 +2,7 @@ package com.example.wanandroid.base
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -26,12 +27,12 @@ import com.f1reking.library.statuslayout.StatusLayout
  * @create: 2020-02-15 22:50
  **/
 
-abstract class BaseFragment<D,VM:BaseViewModel<D,BaseMvvmRepository<List<D>>>,T: ViewDataBinding>:Fragment(),
+abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M>,T: ViewDataBinding>:Fragment(),
     Observer<Any> {
 
-    protected lateinit var viewModel:VM
+    protected var viewModel:VM? = null
     protected lateinit var binding:T
-    protected lateinit var statusLayout: StatusLayout
+    //protected lateinit var statusLayout: StatusLayout
 
 
     abstract fun getLayoutId():Int
@@ -51,51 +52,55 @@ abstract class BaseFragment<D,VM:BaseViewModel<D,BaseMvvmRepository<List<D>>>,T:
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        viewModel = viewModel()
-        lifecycle.addObserver(viewModel)
-        retainInstance = true
+        lifecycle.addObserver(viewModel())
         binding = DataBindingUtil.inflate(inflater,getLayoutId(),container,false)
-        statusLayout = StatusLayout.Builder(binding.root)
-                        .setOnLoadingLayout(R.layout.loading)
-                        .setOnEmptyLayout(R.layout.empty)
-                        .setOnEmptyClickTextColor(Color.parseColor("#03A9F4"))
-                        .setOnErrorLayout(R.layout.error)
-                        .setOnErrorClickTextColor(Color.parseColor("#03A9F4"))
-                        .setOnStatusClickListener(object :StatusClickListener{
-                            override fun onEmptyClick(view: View) {
-                                viewModel().refresh()
-                            }
-
-                            override fun onErrorClick(view: View) {
-                                viewModel().refresh()
-                            }
-                        })
-                        .build()
-
-        init()
+        retainInstance = true
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+//        statusLayout = StatusLayout.Builder(binding.root)
+//            .setOnLoadingLayout(R.layout.loading)
+//            .setOnEmptyLayout(R.layout.empty)
+//            .setOnEmptyClickTextColor(Color.parseColor("#03A9F4"))
+//            .setOnErrorLayout(R.layout.error)
+//            .setOnErrorClickTextColor(Color.parseColor("#03A9F4"))
+//            .setOnStatusClickListener(object :StatusClickListener{
+//                override fun onEmptyClick(view: View) {
+//                    viewModel().refresh()
+//                }
+//
+//                override fun onErrorClick(view: View) {
+//                    viewModel().refresh()
+//                }
+//            })
+//            .build()
         viewModel().status.observe(this,this)
         viewModel().data.observe(this,
             Observer<ObservableArrayList<D>> { dataInsert(it)})
+        init()
     }
 
     override fun onChanged(t: Any) {
         if(t is PageStatus){
+            Log.e("BaseFragment", "change$t")
             when(t){
-                PageStatus.LOADING -> statusLayout.showLoadingLayout()
+                PageStatus.LOADING -> {
+                    //statusLayout.showLoadingLayout()
+                    }
                 PageStatus.SHOW_CONTENT -> {
-                    statusLayout.showContentLayout()
+                    //statusLayout.showContentLayout()
                     if(isRefreshing()){
                         Toast.makeText(context,"刷新成功！",Toast.LENGTH_SHORT).show();
                         refreshCancel()
                     }
                     loadMoreFinished()
                 }
-                PageStatus.EMPTY -> statusLayout.showEmptyLayout()
+                PageStatus.EMPTY -> {
+                    Log.e("BaseFragment","Empty")
+                    //statusLayout.showEmptyLayout()
+                }
                 PageStatus.NO_MORE_DATA -> loadMoreEmpty()
                 PageStatus.LOAD_MORE_FAILED -> loadMoreFailed()
                 PageStatus.REFRESH_ERROR -> Toast.makeText(context,"刷新失败！",Toast.LENGTH_SHORT).show()

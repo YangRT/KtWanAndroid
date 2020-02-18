@@ -18,5 +18,5 @@ import retrofit2.http.Path
 
 interface GetSquareService {
     @GET("/user_article/list/{path}/json")
-    fun getSquareInfo(@Path("page")page:Int): Call<ArticleInfo>
+    fun getSquareInfo(@Path("path")page:Int): Call<ArticleInfo>
 }

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
  * @create: 2020-02-15 11:32
  **/
 
-class BaseViewModel<D,M : BaseMvvmRepository<List<D>>>:ViewModel(), LifecycleObserver {
+open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), LifecycleObserver {
 
     var data = MutableLiveData<ObservableArrayList<D>>()
 
@@ -53,15 +53,18 @@ class BaseViewModel<D,M : BaseMvvmRepository<List<D>>>:ViewModel(), LifecycleObs
         })
     }
 
-    private fun requestData(){
+    fun requestData(){
         launch({
 
             var result = repository.requestData()
             isFirst = false
             dealWithResult(result)
         },{
-            Log.e("BaseViewModel",it.message)
+            Log.e("BaseViewModel",it.message+"requestData")
             isFirst = false
+            if (data.value?.size == 0){
+                status.postValue(PageStatus.EMPTY)
+            }
             Toast.makeText(MyApplication.context,"网络错误！",Toast.LENGTH_SHORT).show()
         })
     }
@@ -81,14 +84,19 @@ class BaseViewModel<D,M : BaseMvvmRepository<List<D>>>:ViewModel(), LifecycleObs
 
     }
 
-    private fun dealWithResult(result: BaseResult<List<D>>){
-       if(result.isEmpty){
+    protected fun dealWithResult(result: BaseResult<List<D>>){
+        Log.e("BaseViewModel","result："+result.data.toString())
+        if(result.isEmpty){
            if(!result.isFromCache && data.value?.size == 0){
                status.postValue(PageStatus.EMPTY)
+               Log.e("BaseViewModel","result："+"EMPTY")
            }else if (!result.isFromCache && result.isFirst){
                status.postValue(PageStatus.EMPTY)
+               Log.e("BaseViewModel","result："+"EMPTY")
            }else if(!result.isFromCache && result.isPaging){
                status.postValue(PageStatus.NO_MORE_DATA)
+               Log.e("BaseViewModel","result："+"NO_MORE_DATA")
+
            }
        } else{
                if(result.isFirst){
@@ -101,7 +109,7 @@ class BaseViewModel<D,M : BaseMvvmRepository<List<D>>>:ViewModel(), LifecycleObs
        }
     }
 
-    private fun launch(block: suspend () -> Unit, error: suspend (Throwable) -> Unit) = viewModelScope.launch {
+    protected fun launch(block: suspend () -> Unit, error: suspend (Throwable) -> Unit) = viewModelScope.launch {
         try {
             block()
         } catch (e: Throwable) {

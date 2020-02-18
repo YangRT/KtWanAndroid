@@ -1,4 +1,4 @@
-package com.example.wanandroid.ui.mainPage
+package com.example.wanandroid.ui.mainPage.search
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

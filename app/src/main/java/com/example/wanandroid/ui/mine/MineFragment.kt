@@ -1,5 +1,12 @@
 package com.example.wanandroid.ui.mine
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import com.example.wanandroid.R
+
 
 /**
  * @program: WanAndroid
@@ -11,5 +18,13 @@ package com.example.wanandroid.ui.mine
  * @create: 2020-02-16 15:06
  **/
 
-class MineFragment {
+class MineFragment :Fragment(){
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        return inflater.inflate(R.layout.fragment_mine,container,false)
+    }
 }

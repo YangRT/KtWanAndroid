@@ -1,6 +1,11 @@
-package com.example.wanandroid.ui.mainPage
+package com.example.wanandroid.ui.square
 
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.databinding.ObservableArrayList
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -9,33 +14,35 @@ import com.example.wanandroid.base.BaseArticleAdapter
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseFragment
 import com.example.wanandroid.databinding.FragmentListBinding
-import com.example.wanandroid.repository.MainPageRepository
+import com.example.wanandroid.databinding.FragmentProjectBinding
+import com.example.wanandroid.repository.ProjectRepository
+import com.example.wanandroid.repository.SqureRepository
+import com.example.wanandroid.ui.project.ProjectViewModel
 
 
 /**
  * @program: WanAndroid
  *
- * @description: "主页" ui
+ * @description: 广场 ui
  *
  * @author: YangRT
  *
- * @create: 2020-02-16 15:23
+ * @create: 2020-02-18 22:12
  **/
 
-class MainPageFragment:BaseFragment<BaseArticleModel,MainPageRepository,MainPageViewModel,FragmentListBinding>() {
-
-    private lateinit var adapter:BaseArticleAdapter
+class SquareFragment: BaseFragment<BaseArticleModel,SqureRepository, SquareViewModel, FragmentListBinding>(){
+    private lateinit var adapter: BaseArticleAdapter
     private  var list: MutableList<BaseArticleModel> = ArrayList()
 
     override fun getLayoutId(): Int {
         return R.layout.fragment_list
     }
 
-    override fun viewModel(): MainPageViewModel {
+    override fun viewModel(): SquareViewModel {
         if(viewModel == null){
-            viewModel = ViewModelProviders.of(this).get(MainPageViewModel::class.java)
+            viewModel = ViewModelProviders.of(this).get(SquareViewModel::class.java)
         }
-        return viewModel as MainPageViewModel;
+        return viewModel as SquareViewModel;
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
@@ -53,7 +60,7 @@ class MainPageFragment:BaseFragment<BaseArticleModel,MainPageRepository,MainPage
     }
 
     override fun fragmentTag(): String {
-        return "mainPage"
+        return "square"
     }
 
     override fun init() {
@@ -68,7 +75,8 @@ class MainPageFragment:BaseFragment<BaseArticleModel,MainPageRepository,MainPage
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(getContext(),
-            DividerItemDecoration.VERTICAL))
+            DividerItemDecoration.VERTICAL)
+        )
         viewModel().getCacheData()
     }
 
@@ -89,4 +97,5 @@ class MainPageFragment:BaseFragment<BaseArticleModel,MainPageRepository,MainPage
             adapter.loadMoreModule?.loadMoreComplete()
         }
     }
+
 }

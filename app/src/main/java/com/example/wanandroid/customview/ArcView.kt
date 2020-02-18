@@ -41,7 +41,7 @@ class ArcView @JvmOverloads constructor(context: Context,attributeSet: Attribute
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec)
         centerX = measuredWidth / 2
-        centerY = measuredHeight / 2
+        centerY = measuredHeight
         start.x =0f
         start.y = measuredHeight*1.0f/4*3;
         end.x = measuredWidth*1.0f

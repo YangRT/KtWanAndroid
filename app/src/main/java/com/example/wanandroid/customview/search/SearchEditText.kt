@@ -2,13 +2,11 @@ package com.example.wanandroid.customview.search
 
 import android.content.Context
 import android.graphics.Rect
-import android.graphics.drawable.AdaptiveIconDrawable
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.EditText
 import androidx.core.content.res.ResourcesCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import com.example.wanandroid.R
 
 
