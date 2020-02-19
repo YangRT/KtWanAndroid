@@ -1,12 +1,16 @@
 package com.example.wanandroid.base
 
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.wanandroid.R
 import com.example.wanandroid.databinding.ActivityBaseListBinding
+import com.example.wanandroid.ui.mine.knowledge.KnowledgeFragment
+import com.example.wanandroid.ui.mine.navigation.NavigationFragment
 import com.example.wanandroid.ui.mine.rank.RankFragment
 
 class BaseListActivity : AppCompatActivity() {
@@ -21,6 +25,8 @@ class BaseListActivity : AppCompatActivity() {
         this.setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
+        window.statusBarColor = Color.parseColor("#03A9F4")
+        binding.toolbar.setBackgroundColor(Color.parseColor("#03A9F4"));
         supportActionBar?.title = ""
         val intent = intent
         type = intent.getStringExtra("type")
@@ -41,10 +47,11 @@ class BaseListActivity : AppCompatActivity() {
                     bundle.putString("count",intent.getStringExtra("count"))
                 }
                 "知识体系" ->{
+                    mFragment = KnowledgeFragment()
 
                 }
                 "导航" ->{
-
+                    mFragment = NavigationFragment()
                 }
                 "search" ->{
                     bundle.putString("key",intent.getStringExtra("key"));

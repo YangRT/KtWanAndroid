@@ -19,6 +19,8 @@ class WanNetwork {
     private val getBannerService:GetBannerService = ServiceCreator.create(GetBannerService::class.java)
     private val getMineService:GetMineService = ServiceCreator.create(GetMineService::class.java)
     private val getRankService:GetRankService = ServiceCreator.create(GetRankService::class.java)
+    private val getKnowledgeService:GetKnowledgeService = ServiceCreator.create(GetKnowledgeService::class.java)
+    private val getNavigationService:GetNavigationService = ServiceCreator.create(GetNavigationService::class.java)
 
     suspend fun login(username:String,password:String) = loginService.getLoginInfo(username,password).await()
     suspend fun register(username:String,password:String,repassword:String) = registerService.getRegisterInfo(username,password,repassword).await()
@@ -28,6 +30,10 @@ class WanNetwork {
     suspend fun getBanner() = getBannerService.getBannerInfo().await()
     suspend fun getMine() = getMineService.getMineInfo().await()
     suspend fun getRank(page:Int) = getRankService.getRankInfo(page).await()
+    suspend fun getKnowledgeInfo() = getKnowledgeService.getKnowledgeInfo().await()
+    suspend fun getKnowledgeArticle(page:Int,id:Int) = getKnowledgeService.getKnowledgeArticle(page,id).await()
+    suspend fun getNavigationInfo() = getNavigationService.getNavigationInfo().await()
+
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

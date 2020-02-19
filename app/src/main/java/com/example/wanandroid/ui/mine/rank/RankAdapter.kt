@@ -19,11 +19,12 @@ import kotlinx.android.synthetic.main.rank_item.view.*
  **/
 
 class RankAdapter(layoutId:Int,data:MutableList<RankItem>):BaseQuickAdapter<RankItem,BaseViewHolder>(layoutId,data),LoadMoreModule {
+
     override fun convert(helper: BaseViewHolder, item: RankItem?) {
         item?.let {
-            helper.setText(R.id.rank_num,it.rank)
+            helper.setText(R.id.rank_num,"${it.rank}")
             helper.setText(R.id.rank_username,it.username)
-            helper.setText(R.id.rank_point,it.coinCount)
+            helper.setText(R.id.rank_point,"${it.coinCount}")
         }
     }
 }

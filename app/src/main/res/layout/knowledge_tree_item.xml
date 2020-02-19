@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:elevation="4dp"
     android:background="#ffffff"
@@ -30,7 +30,7 @@
         android:id="@+id/knowledge_item_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
-    <android.support.v7.widget.RecyclerView
+    <androidx.recyclerview.widget.RecyclerView
         android:background="@drawable/line"
         app:layout_constraintStart_toStartOf="@id/knowledge_item_title"
         app:layout_constraintTop_toBottomOf="@id/knowledge_item_title"
@@ -38,4 +38,4 @@
         android:id="@+id/knowledge_item_recycler"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

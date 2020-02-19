@@ -5,6 +5,8 @@ import com.example.wanandroid.base.BaseResult
 import com.example.wanandroid.data.model.MineData
 import com.example.wanandroid.data.model.MineInfo
 import com.example.wanandroid.data.network.WanNetwork
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 
 /**
@@ -18,6 +20,7 @@ import com.example.wanandroid.data.network.WanNetwork
  **/
 
 class MineRepository:BaseMvvmRepository<List<MineData>>(false,"mine",null) {
+
     override suspend fun load(): BaseResult<List<MineData>> {
         val data = WanNetwork.getInstance().getMine()
         val result = BaseResult<List<MineData>>()
@@ -41,5 +44,9 @@ class MineRepository:BaseMvvmRepository<List<MineData>>(false,"mine",null) {
 
     override suspend fun refresh(): BaseResult<List<MineData>> {
         return load()
+    }
+
+    override fun getTClass(): Type? {
+        return object : TypeToken<List<MineData>>(){}.type
     }
 }
