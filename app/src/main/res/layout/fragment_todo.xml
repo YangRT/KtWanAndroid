@@ -19,7 +19,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintWidth_percent=".40"
-        android:backgroundTint="@color/white"
+        android:backgroundTint="@android:color/white"
         android:id="@+id/list_spinner"
         android:spinnerMode="dropdown"
         android:overlapAnchor="false"

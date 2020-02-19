@@ -10,5 +10,9 @@ package com.example.wanandroid.ui.mainPage.banner
  *
  * @create: 2020-02-16 15:25
  **/
-
-data class BannerModel(var title:String,var link:String,var imagePath:String)
+class BannerModel(){
+    lateinit var title:String
+    lateinit var link:String
+    lateinit var imagePath:String
+    var id:Int = 0
+}

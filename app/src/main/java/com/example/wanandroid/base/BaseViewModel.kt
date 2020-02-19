@@ -44,6 +44,7 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
     fun getCacheData(){
         launch({
             var result = repository.getCacheData()
+            Log.e("getCacheData","result:"+result.data.toString())
             dealWithResult(result)
             if (repository.isNeedToUpdate()){
                 requestData()
@@ -87,7 +88,10 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
     protected fun dealWithResult(result: BaseResult<List<D>>){
         Log.e("BaseViewModel","result："+result.data.toString())
         if(result.isEmpty){
-           if(!result.isFromCache && data.value?.size == 0){
+            if (!result.isFromCache){
+                Toast.makeText(MyApplication.context,result.msg,Toast.LENGTH_SHORT).show()
+            }
+            if(!result.isFromCache && data.value?.size == 0){
                status.postValue(PageStatus.EMPTY)
                Log.e("BaseViewModel","result："+"EMPTY")
            }else if (!result.isFromCache && result.isFirst){

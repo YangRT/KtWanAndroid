@@ -1,6 +1,7 @@
 package com.example.wanandroid.util
 
 import android.content.Context
+import android.util.Log
 import com.example.wanandroid.MyApplication
 import com.google.gson.Gson
 import java.lang.reflect.Type
@@ -27,29 +28,31 @@ fun saveUserInfo(userName:String){
 }
 
 fun getSaveData(key: String):String?{
-    val sharedPreferences = MyApplication.context.getSharedPreferences("user", Context.MODE_PRIVATE)
-    return sharedPreferences.getString(key,null)
+    val sharedPreferences = MyApplication.context.getSharedPreferences(key, Context.MODE_PRIVATE)
+    return sharedPreferences.getString("data",null)
 }
 
 fun getSaveTime(key: String):Long{
-    val sharedPreferences = MyApplication.context.getSharedPreferences("user", Context.MODE_PRIVATE)
-    return sharedPreferences.getLong(key,0)
+    val sharedPreferences = MyApplication.context.getSharedPreferences(key, Context.MODE_PRIVATE)
+    return sharedPreferences.getLong("time",0)
 }
 
 
 fun getUserInfo():String?{
     val sharedPreferences = MyApplication.context.getSharedPreferences("user", Context.MODE_PRIVATE)
-    return sharedPreferences.getString("user",null)
+    return sharedPreferences.getString("name",null)
 }
 
 fun  <T> getDataFromJson(key:String,type:Type):T?{
     val data = getSaveData(key)
     if(data != null){
-        return Gson().fromJson(data,type)
+        val result:T = Gson().fromJson(data,type)
+        return result
     }
     return null
 }
 
 fun <T> toJson(data: T):String{
-    return Gson().toJson(data)
+    val json = Gson().toJson(data)
+    return json
 }

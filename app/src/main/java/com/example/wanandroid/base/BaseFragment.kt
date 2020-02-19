@@ -11,12 +11,7 @@ import androidx.databinding.ObservableArrayList
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import com.drake.statelayout.StateLayout
-import com.drake.statelayout.state
-import com.example.wanandroid.R
-import com.f1reking.library.statuslayout.StatusClickListener
-import com.f1reking.library.statuslayout.StatusLayout
-
+import com.alguojian.mylibrary.StatusLayout
 
 /**
  * @program: WanAndroid
@@ -33,8 +28,7 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
 
     protected var viewModel:VM? = null
     protected lateinit var binding:T
-    //protected lateinit var statusLayout: StatusLayout
-    protected lateinit var state: StateLayout
+    protected lateinit var  statusHelper: StatusLayout.StatusHelper
 
     abstract fun getLayoutId():Int
     abstract fun viewModel():VM
@@ -56,33 +50,16 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
         lifecycle.addObserver(viewModel())
         binding = DataBindingUtil.inflate(inflater,getLayoutId(),container,false)
         retainInstance = true
-        return binding.root
+        val statusLayout = StatusLayout.setNewAdapter(BaseStatusAdapter())
+        statusHelper = statusLayout.attachView(binding.root)
+                    .onRetryClick {
+                        viewModel().refresh()
+                    }
+        return StatusLayout.getRootView()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-//        statusLayout = StatusLayout.Builder(binding.root)
-//            .setOnLoadingLayout(R.layout.loading)
-//            .setOnEmptyLayout(R.layout.empty)
-//            .setOnEmptyClickTextColor(Color.parseColor("#03A9F4"))
-//            .setOnErrorLayout(R.layout.error)
-//            .setOnErrorClickTextColor(Color.parseColor("#03A9F4"))
-//            .setOnStatusClickListener(object :StatusClickListener{
-//                override fun onEmptyClick(view: View) {
-//                    viewModel().refresh()
-//                }
-//
-//                override fun onErrorClick(view: View) {
-//                    viewModel().refresh()
-//                }
-//            })
-//            .build()
-        state = state()
-        state.onRefresh {
-            // 一般在这里进行网络请求
-            viewModel().refresh
-
-        }.showLoading()
         viewModel().status.observe(this,this)
         viewModel().data.observe(this,
             Observer<ObservableArrayList<D>> { dataInsert(it)})
@@ -94,12 +71,10 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
             Log.e("BaseFragment", "change$t")
             when(t){
                 PageStatus.LOADING -> {
-                    //statusLayout.showLoadingLayout()
-                    state.showLoading()
+                    statusHelper.showLoading()
                     }
                 PageStatus.SHOW_CONTENT -> {
-                    //statusLayout.showContentLayout()
-                    state.showContent()
+                    statusHelper.showSuccess()
                     if(isRefreshing()){
                         Toast.makeText(context,"刷新成功！",Toast.LENGTH_SHORT).show();
                         refreshCancel()
@@ -108,17 +83,22 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
                 }
                 PageStatus.EMPTY -> {
                     Log.e("BaseFragment","Empty")
-                    //statusLayout.showEmptyLayout()
-                    state.showEmpty()
+                    statusHelper.showEmpty()
                 }
                 PageStatus.NO_MORE_DATA -> loadMoreEmpty()
                 PageStatus.LOAD_MORE_FAILED -> loadMoreFailed()
                 PageStatus.REFRESH_ERROR -> Toast.makeText(context,"刷新失败！",Toast.LENGTH_SHORT).show()
                 PageStatus.REQUEST_ERROR -> Toast.makeText(context,"请求失败,请检查网络！",Toast.LENGTH_SHORT).show();
-                PageStatus.NETWORK_ERROR -> state.showError()
+                PageStatus.NETWORK_ERROR -> {
+                    statusHelper.showFailed()
+                }
             }
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        StatusLayout.clearNewAdapter()
+    }
 
 }

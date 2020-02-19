@@ -9,15 +9,19 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.wanandroid.MyApplication.Companion.context
 import com.example.wanandroid.R
 import com.example.wanandroid.base.BaseArticleAdapter
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseFragment
+import com.example.wanandroid.base.BaseListFragment
 import com.example.wanandroid.databinding.FragmentListBinding
 import com.example.wanandroid.databinding.FragmentProjectBinding
 import com.example.wanandroid.repository.ProjectRepository
 import com.example.wanandroid.repository.SqureRepository
+import com.example.wanandroid.ui.mainPage.MainPageViewModel
 import com.example.wanandroid.ui.project.ProjectViewModel
+import java.security.AccessController.getContext
 
 
 /**
@@ -30,13 +34,10 @@ import com.example.wanandroid.ui.project.ProjectViewModel
  * @create: 2020-02-18 22:12
  **/
 
-class SquareFragment: BaseFragment<BaseArticleModel,SqureRepository, SquareViewModel, FragmentListBinding>(){
-    private lateinit var adapter: BaseArticleAdapter
-    private  var list: MutableList<BaseArticleModel> = ArrayList()
+class SquareFragment: BaseListFragment<BaseArticleModel, SqureRepository, SquareViewModel>(){
 
-    override fun getLayoutId(): Int {
-        return R.layout.fragment_list
-    }
+
+    private  var list: MutableList<BaseArticleModel> = ArrayList()
 
     override fun viewModel(): SquareViewModel {
         if(viewModel == null){
@@ -49,15 +50,6 @@ class SquareFragment: BaseFragment<BaseArticleModel,SqureRepository, SquareViewM
         adapter.setNewData(data)
     }
 
-    override fun refreshCancel() {
-        if (binding.mainPageRefreshLayout.isRefreshing){
-            binding.mainPageRefreshLayout.isRefreshing = false
-        }
-    }
-
-    override fun isRefreshing(): Boolean {
-        return binding.mainPageRefreshLayout.isRefreshing
-    }
 
     override fun fragmentTag(): String {
         return "square"
@@ -75,27 +67,8 @@ class SquareFragment: BaseFragment<BaseArticleModel,SqureRepository, SquareViewM
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(getContext(),
-            DividerItemDecoration.VERTICAL)
-        )
+            DividerItemDecoration.VERTICAL))
         viewModel().getCacheData()
-    }
-
-    override fun loadMoreEmpty() {
-        if(adapter.loadMoreModule?.isLoading!!){
-            adapter.loadMoreModule?.loadMoreEnd()
-        }
-    }
-
-    override fun loadMoreFailed() {
-        if(adapter.loadMoreModule?.isLoading!!){
-            adapter.loadMoreModule?.loadMoreFail()
-        }
-    }
-
-    override fun loadMoreFinished() {
-        if(adapter.loadMoreModule?.isLoading!!){
-            adapter.loadMoreModule?.loadMoreComplete()
-        }
     }
 
 }

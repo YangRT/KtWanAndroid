@@ -16,12 +16,19 @@ class WanNetwork {
     private val getArticleService:GetArticlesService = ServiceCreator.create(GetArticlesService::class.java)
     private val getProjectService:GetProjectService = ServiceCreator.create(GetProjectService::class.java)
     private val getSquareService:GetSquareService = ServiceCreator.create(GetSquareService::class.java)
+    private val getBannerService:GetBannerService = ServiceCreator.create(GetBannerService::class.java)
+    private val getMineService:GetMineService = ServiceCreator.create(GetMineService::class.java)
+    private val getRankService:GetRankService = ServiceCreator.create(GetRankService::class.java)
 
     suspend fun login(username:String,password:String) = loginService.getLoginInfo(username,password).await()
     suspend fun register(username:String,password:String,repassword:String) = registerService.getRegisterInfo(username,password,repassword).await()
     suspend fun getArticle(page:Int) = getArticleService.getArticles(page).await()
     suspend fun getProject(page: Int) = getProjectService.GetProjectInfo(page).await()
     suspend fun getSquare(page: Int) = getSquareService.getSquareInfo(page).await()
+    suspend fun getBanner() = getBannerService.getBannerInfo().await()
+    suspend fun getMine() = getMineService.getMineInfo().await()
+    suspend fun getRank(page:Int) = getRankService.getRankInfo(page).await()
+
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->
             enqueue(object : Callback<T> {

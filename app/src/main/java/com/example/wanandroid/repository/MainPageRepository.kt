@@ -5,6 +5,8 @@ import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
 import com.example.wanandroid.data.network.WanNetwork
+import com.google.gson.reflect.TypeToken
+import java.lang.reflect.Type
 
 
 /**
@@ -61,8 +63,10 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
             result.isFromCache = false
             result.isPaging = true
         }
-        if(result.isFirst && result.data != null){
-            saveDataToPreference(result.data!!)
+        if(result.isFirst){
+            result.data?.let {
+                saveDataToPreference(it)
+            }
         }
         return result
     }
@@ -76,5 +80,9 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
     suspend fun loadNextPage():BaseResult<List<BaseArticleModel>>{
         isRefreshing = false
         return load()
+    }
+
+    override fun getTClass(): Type? {
+        return object :TypeToken<List<BaseArticleModel>>(){}.type
     }
 }

@@ -44,16 +44,23 @@ import kotlin.coroutines.suspendCoroutine
     protected fun saveDataToPreference(data:T){
         //保存数据
         val str = toJson(data)
-        saveData(str,mCachedPreferenceKey!!)
-        saveTime(System.currentTimeMillis(),mCachedPreferenceKey!!)
+        mCachedPreferenceKey?.let {
+            saveData(str,it)
+            saveTime(System.currentTimeMillis(),it)
+        }
+
     }
 
-    public suspend fun getCacheData():BaseResult<T>{
-        Log.e("BaseMvvmRepository","change")
+    suspend fun getCacheData():BaseResult<T>{
+        Log.e("BaseMvvmRepository","getCacheData")
         var result:BaseResult<T> = BaseResult()
         if(mCachedPreferenceKey != null){
             //获取缓存数据
-            var data = getTClass()?.let { getDataFromJson<T>(mCachedPreferenceKey!!, it) }
+            Log.e("BaseMvvmRepository",mCachedPreferenceKey)
+            val data = getTClass()?.let {
+                Log.e("BaseMvvmRepository",it.toString())
+                getDataFromJson<T>(mCachedPreferenceKey!!, it)
+            }
             result.data = data
             result.isFirst = true
             result.isEmpty = data==null
@@ -74,11 +81,11 @@ import kotlin.coroutines.suspendCoroutine
 
     abstract suspend fun refresh():BaseResult<T>
 
-    public fun isNeedToUpdate():Boolean{
+    open fun isNeedToUpdate():Boolean{
         return true
     }
 
-    protected  fun getTClass():Type?{
+    open fun getTClass():Type?{
         return null;
     }
 

@@ -1,17 +1,26 @@
 package com.example.wanandroid.ui.home
 
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.wanandroid.R
+import com.example.wanandroid.base.BaseListActivity
 import com.example.wanandroid.databinding.ActivityHomeBinding
+import com.example.wanandroid.ui.login.LoginActivity
 import com.example.wanandroid.ui.mainPage.MainPageFragment
+import com.example.wanandroid.ui.mainPage.search.SearchActivity
 import com.example.wanandroid.ui.mine.MineFragment
+import com.example.wanandroid.ui.mine.todo.TodoActivity
 import com.example.wanandroid.ui.project.ProjectFragment
 import com.example.wanandroid.ui.square.SquareFragment
+import com.example.wanandroid.util.getUserInfo
 
 class HomeActivity : AppCompatActivity() {
 
@@ -48,11 +57,11 @@ class HomeActivity : AppCompatActivity() {
                 R.id.mine -> fragment = mineFragment
             }
             fragment?.let { i ->
-                if(fragment == from){
+                if(i == from){
                     return@setOnNavigationItemSelectedListener true
                 }
                 switchFragment(from, i)
-                from = fragment
+                from = i
             }
             binding.toolbarTitle.text = it.title
             invalidateOptionsMenu()
@@ -62,17 +71,98 @@ class HomeActivity : AppCompatActivity() {
 
     private fun switchFragment(from:Fragment,to:Fragment){
         if(from != to){
-            Log.e("Home","switchFragment")
             val transaction = supportFragmentManager.beginTransaction()
             if(!to.isAdded){
-                Log.e("Home","false")
                 transaction.hide(from).add(R.id.fragment,to).commit()
             }else{
-                Log.e("Home","to")
                 transaction.hide(from)
                 transaction.show(to).commit()
             }
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.home_toolbar_menu,menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId){
+            R.id.action_search ->{
+                val intent = Intent(this,SearchActivity::class.java)
+                startActivity(intent)
+            }
+            R.id.action_add ->{
+                val intent = Intent(this,BaseListActivity::class.java)
+                intent.putExtra("type","分享文章")
+                startActivity(intent)
+            }
+            R.id.action_project ->{
+                val intent = Intent(this,BaseListActivity::class.java)
+                intent.putExtra("type","项目分类")
+                startActivity(intent)
+
+            }
+            R.id.action_write ->{
+                if(getUserInfo() == null){
+                    Toast.makeText(this,"请先登录!",Toast.LENGTH_SHORT).show()
+                }else{
+                    val intent = Intent(this,TodoActivity::class.java)
+                    startActivity(intent)
+                }
+            }
+            R.id.action_exit ->{
+
+            }
+            R.id.action_mine ->{
+                val intent = Intent(this,LoginActivity::class.java)
+                startActivity(intent)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
+        when(choseFragmentId){
+            R.id.main ->{
+                menu?.findItem(R.id.action_search)?.isVisible = true
+                menu?.findItem(R.id.action_add)?.isVisible = false
+                menu?.findItem(R.id.action_project)?.isVisible = false
+                menu?.findItem(R.id.action_mine)?.isVisible = false
+                menu?.findItem(R.id.action_exit)?.isVisible = false
+                menu?.findItem(R.id.action_write)?.isVisible = false
+            }
+            R.id.square ->{
+                menu?.findItem(R.id.action_search)?.isVisible = false
+                menu?.findItem(R.id.action_add)?.isVisible = true
+                menu?.findItem(R.id.action_project)?.isVisible = false
+                menu?.findItem(R.id.action_mine)?.isVisible = false
+                menu?.findItem(R.id.action_exit)?.isVisible = false
+                menu?.findItem(R.id.action_write)?.isVisible = false
+            }
+            R.id.project ->{
+                menu?.findItem(R.id.action_search)?.isVisible = false
+                menu?.findItem(R.id.action_add)?.isVisible = false
+                menu?.findItem(R.id.action_project)?.isVisible = true
+                menu?.findItem(R.id.action_mine)?.isVisible = false
+                menu?.findItem(R.id.action_exit)?.isVisible = false
+                menu?.findItem(R.id.action_write)?.isVisible = false
+            }
+            R.id.mine ->{
+                menu?.findItem(R.id.action_search)?.isVisible = false
+                menu?.findItem(R.id.action_add)?.isVisible = false
+                menu?.findItem(R.id.action_project)?.isVisible = false
+                if(getUserInfo() != null){
+                    menu?.findItem(R.id.action_mine)?.isVisible = false
+                    menu?.findItem(R.id.action_exit)?.isVisible = true
+                }else{
+                    menu?.findItem(R.id.action_mine)?.isVisible = true
+                    menu?.findItem(R.id.action_exit)?.isVisible = false
+                }
+                menu?.findItem(R.id.action_write)?.isVisible = true
+            }
+        }
+        return super.onPrepareOptionsMenu(menu)
     }
 
 
