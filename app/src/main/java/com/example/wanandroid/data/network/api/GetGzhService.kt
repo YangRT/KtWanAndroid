@@ -6,12 +6,13 @@ import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 
-interface GetWCService {
+interface GetGzhService {
+
     @GET("/wxarticle/chapters/json")
-    fun getWCListInfo(): Call<GzhListInfo>
+    fun getGzhListInfo(): Call<GzhListInfo>
 
     @GET("/wxarticle/list/{id}/{page}/json")
-    fun getWCArticlesById(@Path("id")id:Int,@Path("page")page:Int):Call<ArticleInfo>
+    fun getGzhArticlesById(@Path("id")id:Int,@Path("page")page:Int):Call<ArticleInfo>
 
     @GET("/wxarticle/list/{id}/{page}/json?k={key}")
     fun getArticlesByKey(@Path("id")id:Int,@Path("page")page:Int,@Path("key")key:String):Call<ArticleInfo>
