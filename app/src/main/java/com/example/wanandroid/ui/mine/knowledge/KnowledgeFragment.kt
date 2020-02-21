@@ -1,10 +1,12 @@
 package com.example.wanandroid.ui.mine.knowledge
 
+import android.content.Intent
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wanandroid.R
 import com.example.wanandroid.base.BaseFragment
+import com.example.wanandroid.base.BaseListActivity
 import com.example.wanandroid.customview.SpaceItemDecoration
 import com.example.wanandroid.data.model.KnowledgeData
 import com.example.wanandroid.databinding.FragmentKnowledgeBinding
@@ -57,8 +59,19 @@ class KnowledgeFragment:BaseFragment<KnowledgeData,KnowledgeRepository,Knowledge
         binding.knowledgeRecyclerview.addItemDecoration(SpaceItemDecoration(50))
         adapter = KnowledgeAdapter(R.layout.knowledge_tree_item,ArrayList<KnowledgeData>())
         binding.knowledgeRecyclerview.adapter = adapter
-        adapter.setOnItemChildClickListener { adapter, view, position ->
-
+        adapter.setOnItemClickListener { adapter, view, position ->
+            val intent = Intent(activity,BaseListActivity::class.java)
+            val data = adapter.data as List<KnowledgeData>
+            intent.putExtra("type",data[position].name)
+            val titleList = ArrayList<String>()
+            val idList = ArrayList<Int>()
+            for (item in data[position].children.listIterator()){
+                titleList.add(item.name)
+                idList.add(item.id)
+            }
+            intent.putStringArrayListExtra("tabTitle",titleList)
+            intent.putIntegerArrayListExtra("tabId",idList)
+            startActivity(intent)
         }
         viewModel().getCacheData()
     }

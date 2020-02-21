@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wanandroid.base.BaseArticleAdapter
 import com.example.wanandroid.base.BaseArticleModel
+import com.example.wanandroid.base.BaseLazyFragment
 import com.example.wanandroid.base.BaseListFragment
 import com.example.wanandroid.repository.GzhRepository
 
@@ -19,7 +20,7 @@ import com.example.wanandroid.repository.GzhRepository
  * @create: 2020-02-21 16:53
  **/
 
-class GzhFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,GzhRepository,GzhViewModel>() {
+class GzhFragment(val cid:Int,val key:String):BaseLazyFragment<BaseArticleModel,GzhRepository,GzhViewModel>() {
 
     override fun viewModel(): GzhViewModel {
         if (viewModel == null){
@@ -29,7 +30,9 @@ class GzhFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
-        adapter.setNewData(data)
+        if (isResumed){
+            adapter.setNewData(data)
+        }
     }
 
     override fun fragmentTag(): String {
@@ -45,11 +48,18 @@ class GzhFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,
         adapter.loadMoreModule?.setOnLoadMoreListener {
             viewModel().loadNextPage()
         }
+        adapter.setOnItemClickListener { adapter, view, position ->
+
+        }
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(
             context, DividerItemDecoration.VERTICAL)
         )
+    }
+
+    override fun onFragmentResume() {
+        super.onFragmentResume()
         viewModel().getCacheData()
     }
 }

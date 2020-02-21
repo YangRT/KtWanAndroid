@@ -1,5 +1,7 @@
 package com.example.wanandroid.data.network.api
 
+import com.example.wanandroid.data.model.TodoEventInfo
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -18,6 +20,6 @@ import retrofit2.http.Query
 interface TodoService {
 
     @GET("/lg/todo/v2/list/{path}/json")
-    fun getTodoService(@Path("path")page:Int,@Query("status")status:Int,@Query("type")type:Int?)
+    fun getTodoService(@Path("path")page:Int,@Query("status")status:Int,@Query("type")type:Int?):Call<TodoEventInfo>
 
 }

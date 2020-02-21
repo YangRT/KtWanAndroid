@@ -47,6 +47,9 @@ class CollectFragment:BaseListFragment<BaseArticleModel,CollectRepository,Collec
         adapter.loadMoreModule?.setOnLoadMoreListener {
             viewModel().loadNextPage()
         }
+        adapter.setOnItemClickListener { adapter, view, position ->
+
+        }
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(

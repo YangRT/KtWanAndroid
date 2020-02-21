@@ -9,9 +9,14 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.wanandroid.R
 import com.example.wanandroid.databinding.ActivityBaseListBinding
+import com.example.wanandroid.ui.mine.collect.CollectFragment
 import com.example.wanandroid.ui.mine.knowledge.KnowledgeFragment
 import com.example.wanandroid.ui.mine.navigation.NavigationFragment
+import com.example.wanandroid.ui.mine.point.PointFragment
 import com.example.wanandroid.ui.mine.rank.RankFragment
+import com.example.wanandroid.ui.mine.share.ShareFragment
+import com.example.wanandroid.ui.tab.TabFragment
+import kotlinx.android.synthetic.main.activity_home.*
 
 class BaseListActivity : AppCompatActivity() {
 
@@ -35,34 +40,40 @@ class BaseListActivity : AppCompatActivity() {
             binding.toolbarTitle.text = type
             when(type){
                 "我的收藏" ->{
-                    bundle.putString("type","collect")
+                    mFragment = CollectFragment()
                 }
                 "我的分享" ->{
-                    bundle.putString("type","share")
+                    mFragment = ShareFragment()
                 }
                 "积分排行" ->{
                     mFragment = RankFragment()
                 }
                 "积分明细" ->{
+                    mFragment = PointFragment()
                     bundle.putString("count",intent.getStringExtra("count"))
                 }
                 "知识体系" ->{
                     mFragment = KnowledgeFragment()
-
                 }
                 "导航" ->{
                     mFragment = NavigationFragment()
+                }
+                "公众号文章" ->{
+                    mFragment = TabFragment("公众号文章")
+                }
+                "项目分类" ->{
+                    mFragment = TabFragment("项目分类")
                 }
                 "search" ->{
                     bundle.putString("key",intent.getStringExtra("key"));
                 }
                 "分享文章" ->{
-
                 }
                 else ->{
-                    bundle.putString("type",type)
+                    mFragment = TabFragment(intent.getStringExtra("type"))
                     bundle.putStringArrayList("tabTitle",intent.getStringArrayListExtra("tabTitle"))
                     bundle.putIntegerArrayList("tabId",intent.getIntegerArrayListExtra("tabId"))
+                    Log.e("BaseList","${intent.getStringArrayListExtra("tabTitle").size}")
                 }
             }
         }

@@ -54,7 +54,7 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
         })
     }
 
-    fun requestData(){
+    private fun requestData(){
         launch({
 
             var result = repository.requestData()
@@ -93,14 +93,10 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
             }
             if(!result.isFromCache && data.value?.size == 0){
                status.postValue(PageStatus.EMPTY)
-               Log.e("BaseViewModel","result："+"EMPTY")
            }else if (!result.isFromCache && result.isFirst){
                status.postValue(PageStatus.EMPTY)
-               Log.e("BaseViewModel","result："+"EMPTY")
            }else if(!result.isFromCache && result.isPaging){
                status.postValue(PageStatus.NO_MORE_DATA)
-               Log.e("BaseViewModel","result："+"NO_MORE_DATA")
-
            }
        } else{
                if(result.isFirst){

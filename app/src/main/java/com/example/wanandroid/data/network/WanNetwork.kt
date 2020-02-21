@@ -43,7 +43,7 @@ class WanNetwork {
     suspend fun getGzhArticleById(page: Int,id: Int) = getGzhService.getGzhArticlesById(id,page).await()
     suspend fun getShareArticle(page: Int) = getMyArticleService.getShareArticle(page).await()
     suspend fun getCollectArticle(page: Int) = getMyArticleService.getCollectArticle(page).await()
-    suspend fun getTodoList(page: Int,status:Int,type:Int?) = getTodoService.getTodoService(page,status,type)
+    suspend fun getTodoList(page: Int,status:Int,type:Int?) = getTodoService.getTodoService(page,status,type).await()
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

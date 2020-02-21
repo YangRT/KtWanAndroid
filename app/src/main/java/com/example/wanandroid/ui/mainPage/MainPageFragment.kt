@@ -24,6 +24,7 @@ import com.example.wanandroid.repository.MainPageRepository
 import com.example.wanandroid.ui.mainPage.banner.BannerAdapter
 import com.example.wanandroid.ui.mainPage.banner.BannerModel
 import com.example.wanandroid.ui.mainPage.banner.BannerViewModel
+import com.example.wanandroid.ui.mine.todo.TodoDetailActivity
 import com.zhpan.bannerview.BannerViewPager
 import com.zhpan.bannerview.adapter.OnPageChangeListenerAdapter
 import com.zhpan.bannerview.constants.*
@@ -83,11 +84,17 @@ class MainPageFragment:BaseListFragment<BaseArticleModel,MainPageRepository,Main
             .setHolderCreator{BannerAdapter()}
             .create(bannerList)
         bannerViewPager.setPageTransformer(object :AccordionTransformer(){})
+        bannerViewPager.setOnPageClickListener {
+
+        }
         binding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.mainPageRefreshLayout.setOnRefreshListener {
             viewModel().refresh()
         }
         adapter = BaseArticleAdapter(list)
+        adapter.setOnItemClickListener { adapter, view, position ->
+
+        }
         adapter.loadMoreModule?.setOnLoadMoreListener {
             viewModel().loadNextPage()
         }

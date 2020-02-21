@@ -1,13 +1,16 @@
 package com.example.wanandroid.ui.tab
 
-import android.os.Bundle
-import android.view.View
+import android.util.Log
 import androidx.databinding.ObservableArrayList
 import androidx.fragment.app.Fragment
 import com.example.wanandroid.R
 import com.example.wanandroid.base.BaseFragment
+import com.example.wanandroid.base.PageStatus
 import com.example.wanandroid.databinding.FragmentTabBinding
 import com.example.wanandroid.repository.TabRepository
+import com.example.wanandroid.ui.mine.gzh.GzhFragment
+import com.example.wanandroid.ui.mine.knowledgeitem.KIFragment
+import com.example.wanandroid.ui.project.classic.ProjectArticleFragment
 
 
 /**
@@ -20,37 +23,56 @@ import com.example.wanandroid.repository.TabRepository
  * @create: 2020-02-20 11:09
  **/
 
-class TabFragment:BaseFragment<TabTitleInfo,TabRepository,TabViewModel,FragmentTabBinding>() {
+class TabFragment(private var type: String):BaseFragment<TabTitleInfo,TabRepository,TabViewModel,FragmentTabBinding>() {
 
-    private var type:String? = null
-    private var titleList :ArrayList<String> = ArrayList()
-    private var idList:ArrayList<Int> = ArrayList()
+    private lateinit var adapter: TabViewPagerAdapter
     private var fragmentList:ArrayList<Fragment> = ArrayList()
+    private var titleList:ArrayList<String> = ArrayList()
+    private var idList:ArrayList<Int> = ArrayList()
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        arguments?.let {
-            type = it.getString("type")
-        }
-        super.onViewCreated(view, savedInstanceState)
-    }
     override fun getLayoutId(): Int {
         return R.layout.fragment_tab
     }
 
     override fun viewModel(): TabViewModel {
         if (viewModel == null){
-            viewModel = type?.let { TabViewModelFactory(it).create(TabViewModel::class.java) }
+            viewModel =  TabViewModelFactory(type).create(TabViewModel::class.java)
         }
         return viewModel as TabViewModel
     }
 
     override fun dataInsert(data: ObservableArrayList<TabTitleInfo>) {
-        fragmentList.clear()
-        titleList.clear()
-        idList.clear()
+        if (type  == "公众号文章"){
+            fragmentList.clear()
+            titleList.clear()
+            createGzhFragment(data)
+            binding.tabViewPager.adapter = adapter
+            adapter.notifyDataSetChanged()
+            binding.tabLayout.setupWithViewPager(binding.tabViewPager)
+        }else if (type == "项目分类"){
+            fragmentList.clear()
+            titleList.clear()
+            createProjectArticleFragment(data)
+            binding.tabViewPager.adapter = adapter
+            adapter.notifyDataSetChanged()
+            binding.tabLayout.setupWithViewPager(binding.tabViewPager)
+        }
+
+    }
+
+    private fun createGzhFragment(data: ArrayList<TabTitleInfo>){
         for(item in data.iterator()){
+            val fragment = GzhFragment(item.id,item.title)
+            fragmentList.add(fragment)
             titleList.add(item.title)
-            idList.add(item.id)
+        }
+    }
+
+    private fun createProjectArticleFragment(data:ArrayList<TabTitleInfo>){
+        for(item in data.iterator()){
+            val fragment = ProjectArticleFragment(item.id,item.title)
+            fragmentList.add(fragment)
+            titleList.add(item.title)
         }
     }
 
@@ -67,10 +89,28 @@ class TabFragment:BaseFragment<TabTitleInfo,TabRepository,TabViewModel,FragmentT
     }
 
     override fun init() {
-
-
+        adapter = TabViewPagerAdapter(childFragmentManager,fragmentList,titleList)
         if (type == "公众号文章" || type == "项目分类"){
             viewModel().getCacheData()
+        }else{
+            fragmentList.clear()
+            titleList.clear()
+            idList.clear()
+            titleList.addAll(arguments!!.getStringArrayList("tabTitle")!!)
+            idList.addAll(arguments!!.getIntegerArrayList("tabId")!!)
+            createKIFragment()
         }
+    }
+
+    private fun createKIFragment(){
+        Log.e("createKI","createKIFragment:${titleList.size}")
+        for(i in 0 until  titleList.size){
+            val fragment =  KIFragment(idList[i], titleList[i])
+            fragmentList.add(fragment)
+        }
+        viewModel().status.postValue(PageStatus.SHOW_CONTENT)
+        binding.tabViewPager.adapter = adapter
+        adapter.notifyDataSetChanged()
+        binding.tabLayout.setupWithViewPager(binding.tabViewPager)
     }
 }

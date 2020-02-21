@@ -67,7 +67,10 @@ import kotlin.coroutines.suspendCoroutine
             result.isFromCache = true
             result.isPaging = isPaging
         }else{
-            result = load()
+            result.isFirst = true
+            result.isEmpty = true
+            result.isFromCache = true
+            result.isPaging = isPaging
         }
         return result
     }

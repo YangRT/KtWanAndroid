@@ -1,12 +1,13 @@
 package com.example.wanandroid.ui.mine.knowledgeitem
 
-import android.os.Bundle
-import android.view.View
+
 import androidx.databinding.ObservableArrayList
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.wanandroid.MyApplication.Companion.context
 import com.example.wanandroid.base.BaseArticleAdapter
 import com.example.wanandroid.base.BaseArticleModel
+import com.example.wanandroid.base.BaseLazyFragment
 import com.example.wanandroid.base.BaseListFragment
 import com.example.wanandroid.repository.KIRepository
 
@@ -21,7 +22,7 @@ import com.example.wanandroid.repository.KIRepository
  * @create: 2020-02-21 15:19
  **/
 
-class KIFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,KIRepository,KIViewModel>() {
+class KIFragment(val cid:Int,val key:String):BaseLazyFragment<BaseArticleModel,KIRepository,KIViewModel>() {
 
     override fun viewModel(): KIViewModel {
         if (viewModel == null){
@@ -31,7 +32,9 @@ class KIFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,K
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
-        adapter.setNewData(data)
+        if (isResumed){
+            adapter.setNewData(data)
+        }
     }
 
     override fun fragmentTag(): String {
@@ -47,11 +50,18 @@ class KIFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,K
         adapter.loadMoreModule?.setOnLoadMoreListener {
             viewModel().loadNextPage()
         }
+        adapter.setOnItemClickListener { adapter, view, position ->
+
+        }
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(
             context, DividerItemDecoration.VERTICAL)
         )
+    }
+
+    override fun onFragmentResume() {
+        super.onFragmentResume()
         viewModel().getCacheData()
     }
 }

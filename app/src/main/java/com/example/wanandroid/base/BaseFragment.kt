@@ -85,7 +85,7 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
                     Log.e("BaseFragment","Empty")
                     statusHelper.showEmpty()
                 }
-                PageStatus.NO_MORE_DATA -> loadMoreEmpty()
+                PageStatus.NO_MORE_DATA -> {loadMoreEmpty()}
                 PageStatus.LOAD_MORE_FAILED -> loadMoreFailed()
                 PageStatus.REFRESH_ERROR -> Toast.makeText(context,"刷新失败！",Toast.LENGTH_SHORT).show()
                 PageStatus.REQUEST_ERROR -> Toast.makeText(context,"请求失败,请检查网络！",Toast.LENGTH_SHORT).show();

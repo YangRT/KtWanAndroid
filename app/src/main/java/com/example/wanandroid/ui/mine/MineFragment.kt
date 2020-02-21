@@ -1,27 +1,19 @@
 package com.example.wanandroid.ui.mine
 
 import android.content.Intent
-import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.databinding.ObservableArrayList
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wanandroid.R
-import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseFragment
 import com.example.wanandroid.base.BaseListActivity
 import com.example.wanandroid.base.PageStatus
 import com.example.wanandroid.data.model.MineData
-import com.example.wanandroid.data.model.MineInfo
 import com.example.wanandroid.databinding.FragmentMineBinding
 import com.example.wanandroid.repository.MineRepository
-import com.example.wanandroid.ui.mine.todo.MineViewModel
 import com.example.wanandroid.util.getUserInfo
 import com.example.wanandroid.util.saveUserInfo
 
@@ -36,7 +28,7 @@ import com.example.wanandroid.util.saveUserInfo
  * @create: 2020-02-16 15:06
  **/
 
-class MineFragment :BaseFragment<MineData,MineRepository,MineViewModel,FragmentMineBinding>(){
+class MineFragment :BaseFragment<MineData,MineRepository, MineViewModel,FragmentMineBinding>(){
 
     private lateinit var mineData:MineData
     private lateinit var itemAdapter:MineAdapter

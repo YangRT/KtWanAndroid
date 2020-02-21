@@ -1,4 +1,4 @@
-package com.example.wanandroid.ui.mine.todo
+package com.example.wanandroid.ui.mine
 
 import com.example.wanandroid.base.BaseViewModel
 import com.example.wanandroid.data.model.MineData
