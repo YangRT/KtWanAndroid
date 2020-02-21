@@ -12,18 +12,18 @@ import java.lang.reflect.Type
 /**
  * @program: WanAndroid
  *
- * @description: 主页 repository
+ * @description: 广场 repository
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 14:51
+ * @create: 2020-02-18 22:44
  **/
 
-class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpage",null) {
+class SquareRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"square",null){
 
     override suspend fun load(): BaseResult<List<BaseArticleModel>> {
         Log.e("BaseRepository","load")
-        val info = WanNetwork.getInstance().getArticle(pageNum)
+        val info = WanNetwork.getInstance().getSquare(pageNum)
         val result:BaseResult<List<BaseArticleModel>> = BaseResult()
         if(info.errorCode == 0){
             pageNum = if(isRefreshing){ 1 }else{ pageNum+1}
@@ -54,7 +54,6 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
             result.isEmpty = resultList.size == 0
             result.isFirst = pageNum == 1
             result.data = resultList
-
         }else{
             result.isEmpty = true
             result.isFirst = pageNum==0
@@ -82,6 +81,6 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
     }
 
     override fun getTClass(): Type? {
-        return object :TypeToken<List<BaseArticleModel>>(){}.type
+        return object : TypeToken<List<BaseArticleModel>>(){}.type
     }
 }

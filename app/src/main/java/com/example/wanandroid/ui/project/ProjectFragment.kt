@@ -56,7 +56,7 @@ class ProjectFragment: BaseListFragment<BaseArticleModel, ProjectRepository, Pro
     override fun init() {
         binding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.mainPageRefreshLayout.setOnRefreshListener {
-            viewModel().loadNextPage()
+            viewModel().refresh()
         }
         adapter = BaseArticleAdapter(list)
         adapter.loadMoreModule?.setOnLoadMoreListener {

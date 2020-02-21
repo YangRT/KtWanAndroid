@@ -39,7 +39,7 @@ class TabFragment:BaseFragment<TabTitleInfo,TabRepository,TabViewModel,FragmentT
 
     override fun viewModel(): TabViewModel {
         if (viewModel == null){
-            viewModel = type?.let { TabViewModelFactory(it).createViewModel() }
+            viewModel = type?.let { TabViewModelFactory(it).create(TabViewModel::class.java) }
         }
         return viewModel as TabViewModel
     }
@@ -68,7 +68,7 @@ class TabFragment:BaseFragment<TabTitleInfo,TabRepository,TabViewModel,FragmentT
 
     override fun init() {
 
-        
+
         if (type == "公众号文章" || type == "项目分类"){
             viewModel().getCacheData()
         }

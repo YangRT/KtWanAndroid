@@ -1,6 +1,5 @@
 package com.example.wanandroid.repository
 
-import android.util.Log
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
@@ -12,26 +11,25 @@ import java.lang.reflect.Type
 /**
  * @program: WanAndroid
  *
- * @description: 广场 repository
+ * @description: 知识体系 item repository
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 22:44
+ * @create: 2020-02-21 15:09
  **/
 
-class SqureRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"square",null){
+class KIRepository(private val id: Int,key:String):BaseMvvmRepository<List<BaseArticleModel>>(true,key,null) {
 
     override suspend fun load(): BaseResult<List<BaseArticleModel>> {
-        Log.e("BaseRepository","load")
-        val datas = WanNetwork.getInstance().getSquare(pageNum)
-        var result:BaseResult<List<BaseArticleModel>> = BaseResult()
-        if(datas.errorCode == 0){
+        val info = WanNetwork.getInstance().getKnowledgeArticle(pageNum,id)
+        val result:BaseResult<List<BaseArticleModel>> = BaseResult()
+        if(info.errorCode == 0){
             pageNum = if(isRefreshing){ 1 }else{ pageNum+1}
-            val list = datas.data.datas
-            var resultList = ArrayList<BaseArticleModel>()
+            val list = info.data.datas
+            val resultList = ArrayList<BaseArticleModel>()
             for (item in list.iterator()){
                 var baseArticle: BaseArticleModel
-                if(!item.envelopePic.equals("")){
+                if(item.envelopePic != ""){
                     baseArticle = BaseArticleModel(BaseArticleModel.PROJECT)
                     baseArticle.description = item.desc
                     baseArticle.imagePath = item.envelopePic
@@ -44,7 +42,7 @@ class SqureRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"square",n
                 baseArticle.time = item.niceDate
                 baseArticle.title = item.title
                 baseArticle.isCollect = item.collect
-                if(!item.author.equals("")){
+                if(item.author != ""){
                     baseArticle.author = item.author
                 }else{
                     baseArticle.author = item.shareUser
@@ -53,16 +51,14 @@ class SqureRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"square",n
             }
             result.isEmpty = resultList.size == 0
             result.isFirst = pageNum == 1
-            result.isFromCache = false
             result.data = resultList
-            result.isPaging = true
         }else{
             result.isEmpty = true
             result.isFirst = pageNum==0
-            result.msg = datas.errorMsg
-            result.isFromCache = false
-            result.isPaging = true
+            result.msg = info.errorMsg
         }
+        result.isPaging = true
+        result.isFromCache = false
         if(result.isFirst){
             result.data?.let {
                 saveDataToPreference(it)

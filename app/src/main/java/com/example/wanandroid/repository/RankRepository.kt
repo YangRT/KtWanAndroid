@@ -1,9 +1,7 @@
 package com.example.wanandroid.repository
 
-import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
-import com.example.wanandroid.data.model.RankInfo
 import com.example.wanandroid.data.model.RankItem
 import com.example.wanandroid.data.network.WanNetwork
 import com.google.gson.reflect.TypeToken
@@ -27,11 +25,11 @@ class RankRepository:BaseMvvmRepository<List<RankItem>>(true,"rank",null) {
     }
 
     override suspend fun load(): BaseResult<List<RankItem>> {
-        val datas = WanNetwork.getInstance().getRank(pageNum)
-        var result:BaseResult<List<RankItem>> = BaseResult()
-        if(datas.errorCode == 0){
+        val info = WanNetwork.getInstance().getRank(pageNum)
+        val result:BaseResult<List<RankItem>> = BaseResult()
+        if(info.errorCode == 0){
             pageNum = if(isRefreshing){ 2 }else{ pageNum+1}
-            val list = datas.data.datas
+            val list = info.data.datas
             result.isEmpty = list.isEmpty()
             result.isFirst = pageNum == 1
             result.isFromCache = false
@@ -40,7 +38,7 @@ class RankRepository:BaseMvvmRepository<List<RankItem>>(true,"rank",null) {
         }else{
             result.isEmpty = true
             result.isFirst = pageNum==1
-            result.msg = datas.errorMsg
+            result.msg = info.errorMsg
             result.isFromCache = false
             result.isPaging = true
         }

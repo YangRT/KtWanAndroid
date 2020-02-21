@@ -58,7 +58,7 @@ class RankFragment:BaseFragment<RankItem,RankRepository,RankViewModel,FragmentLi
     override fun init() {
         binding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.mainPageRefreshLayout.setOnRefreshListener {
-            viewModel().loadNextPage()
+            viewModel().refresh()
         }
         adapter = RankAdapter(R.layout.rank_item,list)
         adapter.loadMoreModule?.setOnLoadMoreListener {
@@ -66,8 +66,8 @@ class RankFragment:BaseFragment<RankItem,RankRepository,RankViewModel,FragmentLi
         }
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
-        binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(getContext(),
-            DividerItemDecoration.VERTICAL)
+        binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(
+            context, DividerItemDecoration.VERTICAL)
         )
         viewModel().getCacheData()
     }

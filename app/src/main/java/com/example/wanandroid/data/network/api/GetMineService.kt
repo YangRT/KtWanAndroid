@@ -18,6 +18,11 @@ import retrofit2.http.Path
  **/
 
 interface GetMineService {
+
     @GET("/lg/coin/userinfo/json")
     fun getMineInfo(): Call<MineInfo>
+
+    @GET("/lg/coin/list/{path}/json")
+    fun getPointDetail(@Path("path")path:Int): Call<PointInfo>
+
 }

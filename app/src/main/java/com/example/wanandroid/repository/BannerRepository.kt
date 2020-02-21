@@ -21,10 +21,10 @@ import java.lang.reflect.Type
 class BannerRepository:BaseMvvmRepository<List<BannerModel>>(false,"banner",null){
 
     override suspend fun load(): BaseResult<List<BannerModel>> {
-        val data = WanNetwork.getInstance().getBanner()
+        val info = WanNetwork.getInstance().getBanner()
         val result:BaseResult<List<BannerModel>> = BaseResult()
-        if(data.errorCode == 0){
-            val list = data.data
+        if(info.errorCode == 0){
+            val list = info.data
             val resultList = ArrayList<BannerModel>()
             for (item in list.iterator()){
                 val bannerModel = BannerModel()
@@ -42,9 +42,14 @@ class BannerRepository:BaseMvvmRepository<List<BannerModel>>(false,"banner",null
         }else{
                 result.isEmpty = true
                 result.isFirst = pageNum==0
-                result.msg = data.errorMsg
+                result.msg = info.errorMsg
                 result.isFromCache = false
                 result.isPaging = false
+        }
+        if(result.isFirst){
+            result.data?.let {
+                saveDataToPreference(it)
+            }
         }
         return result
     }

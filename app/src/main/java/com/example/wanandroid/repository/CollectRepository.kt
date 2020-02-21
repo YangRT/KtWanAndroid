@@ -1,6 +1,5 @@
 package com.example.wanandroid.repository
 
-import android.util.Log
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
@@ -12,19 +11,18 @@ import java.lang.reflect.Type
 /**
  * @program: WanAndroid
  *
- * @description: 主页 repository
+ * @description: 收藏文章 repository
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 14:51
+ * @create: 2020-02-21 17:16
  **/
 
-class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpage",null) {
+class CollectRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"collect",null) {
 
     override suspend fun load(): BaseResult<List<BaseArticleModel>> {
-        Log.e("BaseRepository","load")
-        val info = WanNetwork.getInstance().getArticle(pageNum)
-        val result:BaseResult<List<BaseArticleModel>> = BaseResult()
+        val info = WanNetwork.getInstance().getCollectArticle(pageNum)
+        val result = BaseResult<List<BaseArticleModel>>()
         if(info.errorCode == 0){
             pageNum = if(isRefreshing){ 1 }else{ pageNum+1}
             val list = info.data.datas
@@ -54,7 +52,6 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
             result.isEmpty = resultList.size == 0
             result.isFirst = pageNum == 1
             result.data = resultList
-
         }else{
             result.isEmpty = true
             result.isFirst = pageNum==0
@@ -82,6 +79,6 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
     }
 
     override fun getTClass(): Type? {
-        return object :TypeToken<List<BaseArticleModel>>(){}.type
+        return object : TypeToken<List<BaseArticleModel>>(){}.type
     }
 }

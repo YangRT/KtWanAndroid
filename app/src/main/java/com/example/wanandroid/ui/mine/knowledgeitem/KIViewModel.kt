@@ -1,26 +1,24 @@
-package com.example.wanandroid.ui.square
+package com.example.wanandroid.ui.mine.knowledgeitem
 
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseViewModel
 import com.example.wanandroid.base.PageStatus
-import com.example.wanandroid.repository.SquareRepository
-
+import com.example.wanandroid.repository.KIRepository
 
 /**
  * @program: WanAndroid
  *
- * @description: 广场 vm
+ * @description: 知识体系 item vm
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 22:46
+ * @create: 2020-02-21 15:16
  **/
 
-class SquareViewModel:BaseViewModel<BaseArticleModel,SquareRepository>() {
+class KIViewModel(id:Int,key:String):BaseViewModel<BaseArticleModel,KIRepository>() {
 
     init {
-        repository = SquareRepository()
-
+        repository = KIRepository(id,key)
     }
 
     fun loadNextPage(){

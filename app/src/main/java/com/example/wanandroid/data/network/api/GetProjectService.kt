@@ -5,6 +5,7 @@ import com.example.wanandroid.data.model.ProjectClassicInfo
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 
 /**
@@ -24,5 +25,8 @@ interface GetProjectService {
 
     @GET("/project/tree/json")
     fun getProjectClassic(): Call<ProjectClassicInfo>
+
+    @GET("project/list/{path}/json")
+    fun getProjectArticle(@Path("path")page:Int,@Query("cid")cid:Int):Call<ArticleInfo>
 
 }

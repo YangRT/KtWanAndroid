@@ -21,17 +21,22 @@ import java.lang.reflect.Type
 class NavigationRepository:BaseMvvmRepository<List<NavigationData>>(false,"navigation",null) {
 
     override suspend fun load(): BaseResult<List<NavigationData>> {
-        val data = WanNetwork.getInstance().getNavigationInfo()
+        val info = WanNetwork.getInstance().getNavigationInfo()
         val result:BaseResult<List<NavigationData>> = BaseResult()
-        if(data.errorCode == 0){
-            result.data = data.data
-            result.isEmpty = data.data.isEmpty()
+        if(info.errorCode == 0){
+            result.data = info.data
+            result.isEmpty = info.data.isEmpty()
         }else{
             result.isEmpty = true
         }
         result.isFromCache = false
         result.isPaging = false
         result.isFirst = true
+        if(result.isFirst){
+            result.data?.let {
+                saveDataToPreference(it)
+            }
+        }
         return result
     }
 

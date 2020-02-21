@@ -1,26 +1,25 @@
-package com.example.wanandroid.ui.square
+package com.example.wanandroid.ui.mine.share
 
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseViewModel
 import com.example.wanandroid.base.PageStatus
-import com.example.wanandroid.repository.SquareRepository
+import com.example.wanandroid.repository.ShareRepository
 
 
 /**
  * @program: WanAndroid
  *
- * @description: 广场 vm
+ * @description: 分享文章列表 ui
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 22:46
+ * @create: 2020-02-21 17:41
  **/
 
-class SquareViewModel:BaseViewModel<BaseArticleModel,SquareRepository>() {
+class ShareViewModel:BaseViewModel<BaseArticleModel,ShareRepository>() {
 
     init {
-        repository = SquareRepository()
-
+        repository = ShareRepository()
     }
 
     fun loadNextPage(){

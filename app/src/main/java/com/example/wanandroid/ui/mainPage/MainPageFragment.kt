@@ -85,7 +85,7 @@ class MainPageFragment:BaseListFragment<BaseArticleModel,MainPageRepository,Main
         bannerViewPager.setPageTransformer(object :AccordionTransformer(){})
         binding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.mainPageRefreshLayout.setOnRefreshListener {
-            viewModel().loadNextPage()
+            viewModel().refresh()
         }
         adapter = BaseArticleAdapter(list)
         adapter.loadMoreModule?.setOnLoadMoreListener {

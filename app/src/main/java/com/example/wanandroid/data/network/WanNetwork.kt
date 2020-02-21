@@ -22,21 +22,28 @@ class WanNetwork {
     private val getKnowledgeService:GetKnowledgeService = ServiceCreator.create(GetKnowledgeService::class.java)
     private val getNavigationService:GetNavigationService = ServiceCreator.create(GetNavigationService::class.java)
     private val getGzhService:GetGzhService = ServiceCreator.create(GetGzhService::class.java)
+    private val getMyArticleService:GetMyArticleService = ServiceCreator.create(GetMyArticleService::class.java)
+    private val getTodoService:TodoService = ServiceCreator.create(TodoService::class.java)
 
     suspend fun login(username:String,password:String) = loginService.getLoginInfo(username,password).await()
     suspend fun register(username:String,password:String,repassword:String) = registerService.getRegisterInfo(username,password,repassword).await()
     suspend fun getArticle(page:Int) = getArticleService.getArticles(page).await()
     suspend fun getProject(page: Int) = getProjectService.getProjectInfo(page).await()
     suspend fun getProjectClassic() = getProjectService.getProjectClassic().await()
+    suspend fun getProjectArticle(page: Int,cid:Int) = getProjectService.getProjectArticle(page, cid).await()
     suspend fun getSquare(page: Int) = getSquareService.getSquareInfo(page).await()
     suspend fun getBanner() = getBannerService.getBannerInfo().await()
     suspend fun getMine() = getMineService.getMineInfo().await()
+    suspend fun getPointDetail(page: Int) = getMineService.getPointDetail(page).await()
     suspend fun getRank(page:Int) = getRankService.getRankInfo(page).await()
     suspend fun getKnowledgeInfo() = getKnowledgeService.getKnowledgeInfo().await()
     suspend fun getKnowledgeArticle(page:Int,id:Int) = getKnowledgeService.getKnowledgeArticle(page,id).await()
     suspend fun getNavigationInfo() = getNavigationService.getNavigationInfo().await()
     suspend fun getGzhList() = getGzhService.getGzhListInfo().await()
     suspend fun getGzhArticleById(page: Int,id: Int) = getGzhService.getGzhArticlesById(id,page).await()
+    suspend fun getShareArticle(page: Int) = getMyArticleService.getShareArticle(page).await()
+    suspend fun getCollectArticle(page: Int) = getMyArticleService.getCollectArticle(page).await()
+    suspend fun getTodoList(page: Int,status:Int,type:Int?) = getTodoService.getTodoService(page,status,type)
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

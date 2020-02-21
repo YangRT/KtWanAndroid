@@ -3,7 +3,6 @@ package com.example.wanandroid.repository
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
 import com.example.wanandroid.data.model.MineData
-import com.example.wanandroid.data.model.MineInfo
 import com.example.wanandroid.data.network.WanNetwork
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -22,22 +21,24 @@ import java.lang.reflect.Type
 class MineRepository:BaseMvvmRepository<List<MineData>>(false,"mine",null) {
 
     override suspend fun load(): BaseResult<List<MineData>> {
-        val data = WanNetwork.getInstance().getMine()
+        val info = WanNetwork.getInstance().getMine()
         val result = BaseResult<List<MineData>>()
-        if(data.errorCode == 0){
+        if(info.errorCode == 0){
             val list = ArrayList<MineData>()
-            list.add(data.data)
+            list.add(info.data)
             result.data = list
             result.isEmpty = false
-            result.isPaging = false
-            result.isFromCache = false
-            result.isFirst = true
         }else{
             result.isEmpty = true
-            result.isPaging = false
-            result.isFromCache = false
-            result.isFirst = true
-            result.msg = data.errorMsg
+            result.msg = info.errorMsg
+        }
+        result.isPaging = false
+        result.isFromCache = false
+        result.isFirst = true
+        if(result.isFirst){
+            result.data?.let {
+                saveDataToPreference(it)
+            }
         }
         return result
     }

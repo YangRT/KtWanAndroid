@@ -1,6 +1,5 @@
 package com.example.wanandroid.repository
 
-import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
 import com.example.wanandroid.data.network.WanNetwork
@@ -22,11 +21,11 @@ import java.lang.reflect.Type
 class TabRepository(key:String):BaseMvvmRepository<List<TabTitleInfo>>(false,key,null) {
 
     override suspend fun load(): BaseResult<List<TabTitleInfo>> {
-        var result:BaseResult<List<TabTitleInfo>> = BaseResult()
+        val result:BaseResult<List<TabTitleInfo>> = BaseResult()
         if(mCachedPreferenceKey == "gzh"){
-            val data = WanNetwork.getInstance().getGzhList()
-            if (data.errorCode == 0){
-                val list = data.data
+            val info = WanNetwork.getInstance().getGzhList()
+            if (info.errorCode == 0){
+                val list = info.data
                 val resultList:ArrayList<TabTitleInfo> = ArrayList()
                 for (item in list.iterator()){
                     val tabTitleInfo = TabTitleInfo()
@@ -37,13 +36,13 @@ class TabRepository(key:String):BaseMvvmRepository<List<TabTitleInfo>>(false,key
                 result.isEmpty = resultList.isEmpty()
                 result.data = resultList
             }else{
-                result.msg = data.errorMsg
+                result.msg = info.errorMsg
                 result.isEmpty = true
             }
         }else{
-            val data = WanNetwork.getInstance().getProjectClassic()
-            if(data.errorCode == 0){
-                val list = data.data
+            val info = WanNetwork.getInstance().getProjectClassic()
+            if(info.errorCode == 0){
+                val list = info.data
                 val resultList:ArrayList<TabTitleInfo> = ArrayList()
                 for(item in list.iterator()){
                     val tabTitleInfo = TabTitleInfo()
@@ -54,7 +53,7 @@ class TabRepository(key:String):BaseMvvmRepository<List<TabTitleInfo>>(false,key
                 result.isEmpty = resultList.isEmpty()
                 result.data = resultList
             }else{
-                result.msg = data.errorMsg
+                result.msg = info.errorMsg
                 result.isEmpty = true
             }
 
@@ -62,6 +61,11 @@ class TabRepository(key:String):BaseMvvmRepository<List<TabTitleInfo>>(false,key
         result.isFirst = true
         result.isFromCache = false
         result.isPaging = false
+        if(result.isFirst){
+            result.data?.let {
+                saveDataToPreference(it)
+            }
+        }
         return result
     }
 

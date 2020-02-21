@@ -23,15 +23,15 @@ class ProjectRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"project
 
     override suspend fun load(): BaseResult<List<BaseArticleModel>> {
         Log.e("BaseRepository","load")
-        val datas = WanNetwork.getInstance().getProject(pageNum)
-        var result:BaseResult<List<BaseArticleModel>> = BaseResult()
-        if(datas.errorCode == 0){
+        val info = WanNetwork.getInstance().getProject(pageNum)
+        val result:BaseResult<List<BaseArticleModel>> = BaseResult()
+        if(info.errorCode == 0){
             pageNum = if(isRefreshing){ 1 }else{ pageNum+1}
-            val list = datas.data.datas
-            var resultList = ArrayList<BaseArticleModel>()
+            val list = info.data.datas
+            val resultList = ArrayList<BaseArticleModel>()
             for (item in list.iterator()){
                 var baseArticle: BaseArticleModel
-                if(!item.envelopePic.equals("")){
+                if(item.envelopePic != ""){
                     baseArticle = BaseArticleModel(BaseArticleModel.PROJECT)
                     baseArticle.description = item.desc
                     baseArticle.imagePath = item.envelopePic
@@ -44,7 +44,7 @@ class ProjectRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"project
                 baseArticle.time = item.niceDate
                 baseArticle.title = item.title
                 baseArticle.isCollect = item.collect
-                if(!item.author.equals("")){
+                if(item.author != ""){
                     baseArticle.author = item.author
                 }else{
                     baseArticle.author = item.shareUser
@@ -53,16 +53,14 @@ class ProjectRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"project
             }
             result.isEmpty = resultList.size == 0
             result.isFirst = pageNum == 1
-            result.isFromCache = false
             result.data = resultList
-            result.isPaging = true
         }else{
             result.isEmpty = true
             result.isFirst = pageNum==0
-            result.msg = datas.errorMsg
-            result.isFromCache = false
-            result.isPaging = true
+            result.msg = info.errorMsg
         }
+        result.isFromCache = false
+        result.isPaging = true
         if(result.isFirst){
             result.data?.let {
                 saveDataToPreference(it)

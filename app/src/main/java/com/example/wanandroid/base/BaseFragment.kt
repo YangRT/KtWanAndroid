@@ -47,7 +47,6 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        lifecycle.addObserver(viewModel())
         binding = DataBindingUtil.inflate(inflater,getLayoutId(),container,false)
         retainInstance = true
         val statusLayout = StatusLayout.setNewAdapter(BaseStatusAdapter())
@@ -60,6 +59,7 @@ abstract class BaseFragment<D,M:BaseMvvmRepository<List<D>>,VM:BaseViewModel<D,M
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        lifecycle.addObserver(viewModel())
         viewModel().status.observe(this,this)
         viewModel().data.observe(this,
             Observer<ObservableArrayList<D>> { dataInsert(it)})

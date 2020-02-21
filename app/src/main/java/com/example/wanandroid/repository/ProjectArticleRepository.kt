@@ -1,6 +1,5 @@
 package com.example.wanandroid.repository
 
-import android.util.Log
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
@@ -12,26 +11,29 @@ import java.lang.reflect.Type
 /**
  * @program: WanAndroid
  *
- * @description: 主页 repository
+ * @description: 项目分类下文章 repository
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 14:51
+ * @create: 2020-02-21 15:46
  **/
 
-class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpage",null) {
+class ProjectArticleRepository(private val cid: Int,key:String):BaseMvvmRepository<List<BaseArticleModel>>(true,key,null) {
+
+    init {
+       pageNum = 1
+   }
 
     override suspend fun load(): BaseResult<List<BaseArticleModel>> {
-        Log.e("BaseRepository","load")
-        val info = WanNetwork.getInstance().getArticle(pageNum)
+        val info = WanNetwork.getInstance().getProjectArticle(pageNum,cid)
         val result:BaseResult<List<BaseArticleModel>> = BaseResult()
         if(info.errorCode == 0){
-            pageNum = if(isRefreshing){ 1 }else{ pageNum+1}
+            pageNum = if(isRefreshing){ 2 }else{ pageNum+1}
             val list = info.data.datas
             val resultList = ArrayList<BaseArticleModel>()
             for (item in list.iterator()){
                 var baseArticle: BaseArticleModel
-                if(item.envelopePic != ""){
+                if(!item.envelopePic.equals("")){
                     baseArticle = BaseArticleModel(BaseArticleModel.PROJECT)
                     baseArticle.description = item.desc
                     baseArticle.imagePath = item.envelopePic
@@ -44,20 +46,19 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
                 baseArticle.time = item.niceDate
                 baseArticle.title = item.title
                 baseArticle.isCollect = item.collect
-                if(item.author != ""){
+                if(!item.author.equals("")){
                     baseArticle.author = item.author
                 }else{
                     baseArticle.author = item.shareUser
                 }
                 resultList.add(baseArticle)
             }
-            result.isEmpty = resultList.size == 0
-            result.isFirst = pageNum == 1
             result.data = resultList
-
+            result.isEmpty = resultList.isEmpty()
+            result.isFirst = pageNum == 2
         }else{
             result.isEmpty = true
-            result.isFirst = pageNum==0
+            result.isFirst = pageNum==1
             result.msg = info.errorMsg
         }
         result.isFromCache = false
@@ -72,7 +73,7 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
 
     override suspend fun refresh(): BaseResult<List<BaseArticleModel>> {
         isRefreshing = true
-        pageNum = 0
+        pageNum = 1
         return load()
     }
 
@@ -82,6 +83,6 @@ class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpa
     }
 
     override fun getTClass(): Type? {
-        return object :TypeToken<List<BaseArticleModel>>(){}.type
+        return object : TypeToken<List<BaseArticleModel>>(){}.type
     }
 }

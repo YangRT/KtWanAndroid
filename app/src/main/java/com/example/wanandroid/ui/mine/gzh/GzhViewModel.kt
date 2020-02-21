@@ -1,26 +1,25 @@
-package com.example.wanandroid.ui.square
+package com.example.wanandroid.ui.mine.gzh
 
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseViewModel
 import com.example.wanandroid.base.PageStatus
-import com.example.wanandroid.repository.SquareRepository
+import com.example.wanandroid.repository.GzhRepository
 
 
 /**
  * @program: WanAndroid
  *
- * @description: 广场 vm
+ * @description: 公众号文章 vm
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 22:46
+ * @create: 2020-02-21 16:50
  **/
 
-class SquareViewModel:BaseViewModel<BaseArticleModel,SquareRepository>() {
+class GzhViewModel(cid:Int,key:String):BaseViewModel<BaseArticleModel,GzhRepository>() {
 
     init {
-        repository = SquareRepository()
-
+        repository = GzhRepository(cid, key)
     }
 
     fun loadNextPage(){
@@ -33,4 +32,5 @@ class SquareViewModel:BaseViewModel<BaseArticleModel,SquareRepository>() {
             status.postValue(PageStatus.LOAD_MORE_FAILED)
         })
     }
+
 }

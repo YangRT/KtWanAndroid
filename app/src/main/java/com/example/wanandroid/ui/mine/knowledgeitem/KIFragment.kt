@@ -1,59 +1,57 @@
-package com.example.wanandroid.ui.square
+package com.example.wanandroid.ui.mine.knowledgeitem
 
+import android.os.Bundle
+import android.view.View
 import androidx.databinding.ObservableArrayList
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.wanandroid.base.BaseArticleAdapter
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseListFragment
-import com.example.wanandroid.repository.SquareRepository
+import com.example.wanandroid.repository.KIRepository
+
 
 /**
  * @program: WanAndroid
  *
- * @description: 广场 ui
+ * @description: 知识体系 item ui
  *
  * @author: YangRT
  *
- * @create: 2020-02-18 22:12
+ * @create: 2020-02-21 15:19
  **/
 
-class SquareFragment: BaseListFragment<BaseArticleModel, SquareRepository, SquareViewModel>(){
+class KIFragment(val cid:Int,val key:String):BaseListFragment<BaseArticleModel,KIRepository,KIViewModel>() {
 
-
-    private  var list: MutableList<BaseArticleModel> = ArrayList()
-
-    override fun viewModel(): SquareViewModel {
-        if(viewModel == null){
-            viewModel = ViewModelProviders.of(this).get(SquareViewModel::class.java)
+    override fun viewModel(): KIViewModel {
+        if (viewModel == null){
+            viewModel = KIViewModelFactory(cid,key).create(KIViewModel::class.java)
         }
-        return viewModel as SquareViewModel
+        return viewModel as KIViewModel
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
         adapter.setNewData(data)
     }
 
-
     override fun fragmentTag(): String {
-        return "square"
+        return key
     }
 
     override fun init() {
+        adapter = BaseArticleAdapter(ArrayList())
         binding.articleRecyclerView.layoutManager = LinearLayoutManager(context)
         binding.mainPageRefreshLayout.setOnRefreshListener {
             viewModel().refresh()
         }
-        adapter = BaseArticleAdapter(list)
         adapter.loadMoreModule?.setOnLoadMoreListener {
             viewModel().loadNextPage()
         }
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(
-            context, DividerItemDecoration.VERTICAL))
+            context, DividerItemDecoration.VERTICAL)
+        )
         viewModel().getCacheData()
     }
-
 }
