@@ -88,7 +88,7 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
     protected fun dealWithResult(result: BaseResult<List<D>>){
         Log.e("BaseViewModel","result："+result.data.toString())
         if(result.isEmpty){
-            if (!result.isFromCache){
+            if (!result.isFromCache && result.msg != null){
                 Toast.makeText(MyApplication.context,result.msg,Toast.LENGTH_SHORT).show()
             }
             if(!result.isFromCache && data.value?.size == 0){

@@ -97,6 +97,7 @@ class MineFragment :BaseFragment<MineData,MineRepository, MineViewModel,Fragment
             }
             startActivity(intent)
         }
+        viewModel().getCacheData()
     }
 
     override fun onChanged(t: Any) {

@@ -10,6 +10,8 @@ import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.*
+import com.bumptech.glide.Glide.init
+import com.example.wanandroid.MyApplication.Companion.context
 import com.example.wanandroid.R
 import kotlinx.android.synthetic.main.search_view.view.*
 
@@ -23,7 +25,7 @@ import kotlinx.android.synthetic.main.search_view.view.*
  * @create: 2020-02-16 16:17
  **/
 
-class SearchView(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):LinearLayout(context,attributeSet,defStyleAttr){
+class SearchView@JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):LinearLayout(context,attributeSet,defStyleAttr){
 
     private lateinit var baseAdapter:BaseAdapter
 

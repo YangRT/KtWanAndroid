@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.widget.EditText
 import androidx.core.content.res.ResourcesCompat
+import com.bumptech.glide.Glide.init
 import com.example.wanandroid.R
 
 
@@ -20,7 +21,7 @@ import com.example.wanandroid.R
  * @create: 2020-02-16 15:43
  **/
 
-class SearchEditText(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):EditText(context,attributeSet,defStyleAttr) {
+class SearchEditText@JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):EditText(context,attributeSet,defStyleAttr) {
 
     private var clearDrawable: Drawable? = null
     private var backDrawable: Drawable? = null

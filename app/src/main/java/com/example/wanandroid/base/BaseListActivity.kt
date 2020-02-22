@@ -9,6 +9,7 @@ import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import com.example.wanandroid.R
 import com.example.wanandroid.databinding.ActivityBaseListBinding
+import com.example.wanandroid.ui.mainPage.search.article.SearchArticleFragment
 import com.example.wanandroid.ui.mine.collect.CollectFragment
 import com.example.wanandroid.ui.mine.knowledge.KnowledgeFragment
 import com.example.wanandroid.ui.mine.navigation.NavigationFragment
@@ -65,7 +66,8 @@ class BaseListActivity : AppCompatActivity() {
                     mFragment = TabFragment("项目分类")
                 }
                 "search" ->{
-                    bundle.putString("key",intent.getStringExtra("key"));
+                    binding.toolbarTitle.text = intent.getStringExtra("key")
+                    mFragment = SearchArticleFragment(intent.getStringExtra("key"))
                 }
                 "分享文章" ->{
                 }

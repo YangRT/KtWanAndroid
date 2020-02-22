@@ -22,7 +22,7 @@ interface GetMyArticleService {
     @GET("lg/collect/list/{path}/json")
     fun getCollectArticle(@Path("path")page:Int):Call<ArticleInfo>
 
-    @GET("lg/private_articles/{path}/json")
+    @GET("user/lg/private_articles/{path}/json")
     fun getShareArticle(@Path("path")page:Int):Call<ShareInfo>
 
 }

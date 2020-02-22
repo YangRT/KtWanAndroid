@@ -24,6 +24,7 @@ class WanNetwork {
     private val getGzhService:GetGzhService = ServiceCreator.create(GetGzhService::class.java)
     private val getMyArticleService:GetMyArticleService = ServiceCreator.create(GetMyArticleService::class.java)
     private val getTodoService:TodoService = ServiceCreator.create(TodoService::class.java)
+    private val searchService:SearchService = ServiceCreator.create(SearchService::class.java)
 
     suspend fun login(username:String,password:String) = loginService.getLoginInfo(username,password).await()
     suspend fun register(username:String,password:String,repassword:String) = registerService.getRegisterInfo(username,password,repassword).await()
@@ -44,6 +45,8 @@ class WanNetwork {
     suspend fun getShareArticle(page: Int) = getMyArticleService.getShareArticle(page).await()
     suspend fun getCollectArticle(page: Int) = getMyArticleService.getCollectArticle(page).await()
     suspend fun getTodoList(page: Int,status:Int,type:Int?) = getTodoService.getTodoService(page,status,type).await()
+    suspend fun getHotWord() = searchService.getHotWord().await()
+    suspend fun getSearchArticle(page:Int,key:String) = searchService.search(page,key).await()
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

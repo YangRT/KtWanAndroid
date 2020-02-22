@@ -15,7 +15,7 @@ import android.widget.ListView
  * @create: 2020-02-16 16:06
  **/
 
-class SearchHistoryView(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):
+class SearchHistoryView @JvmOverloads constructor(context: Context, attributeSet: AttributeSet? = null, defStyleAttr:Int = 0):
     ListView(context,attributeSet,defStyleAttr) {
 
     override fun onMeasure(widthMeasureSpec: Int, heightMeasureSpec: Int) {

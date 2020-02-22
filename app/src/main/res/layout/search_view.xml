@@ -27,6 +27,7 @@
     </LinearLayout>
     <fragment
         android:id="@+id/search_hot_word"
+        android:name="com.example.wanandroid.ui.mainPage.search.word.HotWordFragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
     <ScrollView
