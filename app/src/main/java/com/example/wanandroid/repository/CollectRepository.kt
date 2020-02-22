@@ -3,6 +3,7 @@ package com.example.wanandroid.repository
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
+import com.example.wanandroid.data.model.ResponseInfo
 import com.example.wanandroid.data.network.WanNetwork
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -41,7 +42,7 @@ class CollectRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"collect
                 baseArticle.id = item.id
                 baseArticle.time = item.niceDate
                 baseArticle.title = item.title
-                baseArticle.isCollect = item.collect
+                baseArticle.isCollect = true
                 if(item.author != ""){
                     baseArticle.author = item.author
                 }else{
@@ -80,5 +81,9 @@ class CollectRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"collect
 
     override fun getTClass(): Type? {
         return object : TypeToken<List<BaseArticleModel>>(){}.type
+    }
+
+    suspend fun unCollect(id:Int,originId:Int):ResponseInfo{
+        return WanNetwork.getInstance().unCollectInMine(id,originId)
     }
 }

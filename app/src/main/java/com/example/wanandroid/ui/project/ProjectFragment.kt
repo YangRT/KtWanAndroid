@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.ObservableArrayList
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -64,6 +65,26 @@ class ProjectFragment: BaseListFragment<BaseArticleModel, ProjectRepository, Pro
         }
         adapter.setOnItemClickListener { adapter, view, position ->
 
+        }
+        viewModel().collectResponse.observe(this, Observer {
+            if (it.type == 0){
+                val article = adapter.data[it.position]
+                article.isCollect = true
+                adapter.setData(it.position,article)
+            }else if (it.type == 1){
+                val article = adapter.data[it.position]
+                article.isCollect = false
+                adapter.setData(it.position,article)
+            }
+        })
+        adapter.addChildClickViewIds(R.id.main_page_recyclerview_item_collect)
+        adapter.setOnItemChildClickListener { adapter, view, position ->
+            val article = adapter.data[position] as BaseArticleModel
+            if(article.isCollect){
+                viewModel().unCollect(article.id,position)
+            } else{
+                viewModel().addCollect(article.id,position)
+            }
         }
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         binding.articleRecyclerView.adapter = adapter

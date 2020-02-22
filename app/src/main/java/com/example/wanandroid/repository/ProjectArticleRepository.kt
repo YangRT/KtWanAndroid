@@ -3,6 +3,7 @@ package com.example.wanandroid.repository
 import com.example.wanandroid.base.BaseArticleModel
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
+import com.example.wanandroid.data.model.ResponseInfo
 import com.example.wanandroid.data.network.WanNetwork
 import com.google.gson.reflect.TypeToken
 import java.lang.reflect.Type
@@ -84,5 +85,13 @@ class ProjectArticleRepository(private val cid: Int,key:String):BaseMvvmReposito
 
     override fun getTClass(): Type? {
         return object : TypeToken<List<BaseArticleModel>>(){}.type
+    }
+
+    suspend fun addCollect(id:Int): ResponseInfo {
+        return WanNetwork.getInstance().addCollect(id)
+    }
+
+    suspend fun unCollect(id:Int): ResponseInfo {
+        return WanNetwork.getInstance().unCollect(id)
     }
 }

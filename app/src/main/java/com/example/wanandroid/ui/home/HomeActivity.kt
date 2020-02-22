@@ -10,6 +10,9 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.example.wanandroid.MyApplication
 import com.example.wanandroid.R
 import com.example.wanandroid.base.BaseListActivity
 import com.example.wanandroid.databinding.ActivityHomeBinding
@@ -20,16 +23,19 @@ import com.example.wanandroid.ui.mine.MineFragment
 import com.example.wanandroid.ui.mine.todo.TodoActivity
 import com.example.wanandroid.ui.project.ProjectFragment
 import com.example.wanandroid.ui.square.SquareFragment
+import com.example.wanandroid.util.cleanApplicationData
 import com.example.wanandroid.util.getUserInfo
 
-class HomeActivity : AppCompatActivity() {
+class HomeActivity : AppCompatActivity(),Observer<Int> {
+
 
     private val TAG = "HomeActivity"
 
-    private var mainPageFragment:Fragment = MainPageFragment()
-    private var squareFragment:Fragment = SquareFragment()
-    private var projectFragment:Fragment = ProjectFragment()
-    private var mineFragment:Fragment = MineFragment()
+    private lateinit var viewModel: HomeViewModel
+    private var mainPageFragment = MainPageFragment()
+    private var squareFragment = SquareFragment()
+    private var projectFragment = ProjectFragment()
+    private var mineFragment = MineFragment()
     private lateinit var from :Fragment
     private lateinit var binding:ActivityHomeBinding
 
@@ -38,6 +44,9 @@ class HomeActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this,R.layout.activity_home)
+        viewModel = ViewModelProviders.of(this).get(HomeViewModel::class.java)
+
+        viewModel.exitResponse.observe(this, this)
         setSupportActionBar(binding.toolbar)
         supportActionBar?.title = ""
         binding.toolbarTitle.text = "首页"
@@ -66,6 +75,18 @@ class HomeActivity : AppCompatActivity() {
             binding.toolbarTitle.text = it.title
             invalidateOptionsMenu()
             return@setOnNavigationItemSelectedListener true
+        }
+    }
+
+    override fun onChanged(t: Int?) {
+        if (t == 1){
+            Log.e("Home","success")
+            cleanApplicationData(MyApplication().getContext())
+            mineFragment.tryToRefresh()
+            invalidateOptionsMenu()
+        }else{
+            Log.e("Home","fail")
+
         }
     }
 
@@ -112,7 +133,7 @@ class HomeActivity : AppCompatActivity() {
                 }
             }
             R.id.action_exit ->{
-
+                viewModel.exit()
             }
             R.id.action_mine ->{
                 val intent = Intent(this,LoginActivity::class.java)

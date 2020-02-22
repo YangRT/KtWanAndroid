@@ -45,13 +45,15 @@ class MineFragment :BaseFragment<MineData,MineRepository, MineViewModel,Fragment
     }
 
     override fun dataInsert(data: ObservableArrayList<MineData>) {
+        Log.e("Mine","${data.size}")
         if (data.size > 0){
+            Log.e("Mine","${data[0]}")
             mineData = data[0]
             setData()
-            saveUserInfo(mineData.username)
+        }else{
+            Log.e("Mine","default")
+            setDefaultValue()
         }
-
-
     }
 
     override fun refreshCancel() {
@@ -114,6 +116,10 @@ class MineFragment :BaseFragment<MineData,MineRepository, MineViewModel,Fragment
         }
     }
 
+     fun tryToRefresh(){
+        viewModel().refresh()
+    }
+
     private fun setItemInfo(){
         val collect = MineItemInfo()
         collect.title= "我的收藏"
@@ -147,7 +153,7 @@ class MineFragment :BaseFragment<MineData,MineRepository, MineViewModel,Fragment
 
     private fun setData(){
         binding.mineLevel.text = "等级:${mineData.level}"
-        binding.mineUsername.text = mineData.username
+        binding.mineUsername.text = getUserInfo()
         binding.mineRank.text = "排名:${mineData.rank}"
         binding.minePoint.text = "积分:${mineData.coinCount}"
     }

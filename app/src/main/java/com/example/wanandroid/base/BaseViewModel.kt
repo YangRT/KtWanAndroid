@@ -72,13 +72,14 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
 
     fun refresh(){
         if (status.value != PageStatus.LOADING){
+            Log.e("BaseViewModel","refresh")
             refresh.value = true
             launch({
-                var result = repository.getCacheData()
+                var result = repository.refresh()
+                refresh.value = false
                 dealWithResult(result)
             },{
                 refresh.value = false
-                Log.e("BaseViewModel",it.message)
                 status.postValue(PageStatus.REFRESH_ERROR)
             })
         }

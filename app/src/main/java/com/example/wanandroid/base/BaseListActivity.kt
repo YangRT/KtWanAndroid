@@ -16,8 +16,8 @@ import com.example.wanandroid.ui.mine.navigation.NavigationFragment
 import com.example.wanandroid.ui.mine.point.PointFragment
 import com.example.wanandroid.ui.mine.rank.RankFragment
 import com.example.wanandroid.ui.mine.share.ShareFragment
+import com.example.wanandroid.ui.square.share.ShareArticleFragment
 import com.example.wanandroid.ui.tab.TabFragment
-import kotlinx.android.synthetic.main.activity_home.*
 
 class BaseListActivity : AppCompatActivity() {
 
@@ -32,7 +32,7 @@ class BaseListActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setDisplayShowHomeEnabled(true)
         window.statusBarColor = Color.parseColor("#03A9F4")
-        binding.toolbar.setBackgroundColor(Color.parseColor("#03A9F4"));
+        binding.toolbar.setBackgroundColor(Color.parseColor("#03A9F4"))
         supportActionBar?.title = ""
         val intent = intent
         type = intent.getStringExtra("type")
@@ -70,6 +70,7 @@ class BaseListActivity : AppCompatActivity() {
                     mFragment = SearchArticleFragment(intent.getStringExtra("key"))
                 }
                 "分享文章" ->{
+                    mFragment = ShareArticleFragment()
                 }
                 else ->{
                     mFragment = TabFragment(intent.getStringExtra("type"))
@@ -86,8 +87,8 @@ class BaseListActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if(item.itemId == android.R.id.home){
-            finish();
-            return true;
+            finish()
+            return true
         }
         return super.onOptionsItemSelected(item)
     }

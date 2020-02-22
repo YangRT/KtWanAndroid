@@ -25,6 +25,9 @@ class WanNetwork {
     private val getMyArticleService:GetMyArticleService = ServiceCreator.create(GetMyArticleService::class.java)
     private val getTodoService:TodoService = ServiceCreator.create(TodoService::class.java)
     private val searchService:SearchService = ServiceCreator.create(SearchService::class.java)
+    private val collectService:CollectService = ServiceCreator.create(CollectService::class.java)
+    private val shareService:ShareService = ServiceCreator.create(ShareService::class.java)
+    private val exitService:ExitService = ServiceCreator.create(ExitService::class.java)
 
     suspend fun login(username:String,password:String) = loginService.getLoginInfo(username,password).await()
     suspend fun register(username:String,password:String,repassword:String) = registerService.getRegisterInfo(username,password,repassword).await()
@@ -47,6 +50,11 @@ class WanNetwork {
     suspend fun getTodoList(page: Int,status:Int,type:Int?) = getTodoService.getTodoService(page,status,type).await()
     suspend fun getHotWord() = searchService.getHotWord().await()
     suspend fun getSearchArticle(page:Int,key:String) = searchService.search(page,key).await()
+    suspend fun addCollect(id:Int) = collectService.addCollectArticle(id).await()
+    suspend fun unCollect(id:Int) = collectService.getUnCollectResponse(id).await()
+    suspend fun unCollectInMine(id: Int,originId:Int) = collectService.getUnCollectInMineResponse(id, originId).await()
+    suspend fun shareArticle(title:String,link:String) = shareService.getShareArticleResponse(title, link).await()
+    suspend fun exit() = exitService.getExitInfo().await()
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->

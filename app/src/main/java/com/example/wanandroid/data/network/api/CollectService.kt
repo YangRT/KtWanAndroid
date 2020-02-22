@@ -7,8 +7,7 @@ import retrofit2.http.*
 
 interface CollectService {
 
-    @GET("/lg/collect/list/0/json")
-    fun getCollectInfo():Call<CollectArticleInfo>
+
 
     @POST("/lg/collect/{id}/json")
     fun addCollectArticle(@Path("id")id:Int):Call<ResponseInfo>
@@ -18,5 +17,5 @@ interface CollectService {
 
     @FormUrlEncoded
     @POST("lg/uncollect/{id}/json")
-    fun getUnCollectInMineResponse(@Path("id")id:Int,@Field("originId")originId:Int?)
+    fun getUnCollectInMineResponse(@Path("id")id:Int,@Field("originId")originId:Int?):Call<ResponseInfo>
 }

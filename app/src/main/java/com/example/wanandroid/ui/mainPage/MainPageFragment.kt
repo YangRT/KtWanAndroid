@@ -103,6 +103,26 @@ class MainPageFragment:BaseListFragment<BaseArticleModel,MainPageRepository,Main
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(getContext(),
             DividerItemDecoration.VERTICAL))
         adapter.addHeaderView(headView)
+        viewModel().collectResponse.observe(this, Observer {
+            if (it.type == 0){
+                val article = adapter.data[it.position]
+                article.isCollect = true
+                adapter.setData(it.position,article)
+            }else if (it.type == 1){
+                val article = adapter.data[it.position]
+                article.isCollect = false
+                adapter.setData(it.position,article)
+            }
+        })
+        adapter.addChildClickViewIds(R.id.main_page_recyclerview_item_collect)
+        adapter.setOnItemChildClickListener { adapter, view, position ->
+            val article = adapter.data[position] as BaseArticleModel
+            if(article.isCollect){
+                viewModel().unCollect(article.id,position)
+            } else{
+                viewModel().addCollect(article.id,position)
+            }
+        }
         viewModel().getCacheData()
         bannerViewModel.getCacheData()
         bannerViewModel.data.observe(this, Observer {
