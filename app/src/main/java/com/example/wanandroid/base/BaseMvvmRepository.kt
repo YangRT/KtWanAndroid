@@ -76,6 +76,7 @@ import kotlin.coroutines.suspendCoroutine
     }
 
     suspend fun requestData():BaseResult<T>{
+        Log.e("requestData",Thread.currentThread().name)
         return load()
     }
 

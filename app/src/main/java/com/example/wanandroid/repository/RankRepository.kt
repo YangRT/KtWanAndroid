@@ -31,7 +31,7 @@ class RankRepository:BaseMvvmRepository<List<RankItem>>(true,"rank",null) {
             pageNum = if(isRefreshing){ 2 }else{ pageNum+1}
             val list = info.data.datas
             result.isEmpty = list.isEmpty()
-            result.isFirst = pageNum == 1
+            result.isFirst = pageNum == 2
             result.isFromCache = false
             result.data = list
             result.isPaging = true

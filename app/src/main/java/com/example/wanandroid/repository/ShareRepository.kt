@@ -64,6 +64,11 @@ class ShareRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"share",nu
         }
         result.isPaging = true
         result.isFromCache = false
+        if(result.isFirst){
+            result.data?.let {
+                saveDataToPreference(it)
+            }
+        }
         return result
     }
 

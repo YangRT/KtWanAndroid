@@ -23,7 +23,7 @@ import java.lang.reflect.Type
 class MainPageRepository:BaseMvvmRepository<List<BaseArticleModel>>(true,"mainpage",null) {
 
     override suspend fun load(): BaseResult<List<BaseArticleModel>> {
-        Log.e("BaseRepository","load")
+        Log.e("load",Thread.currentThread().name)
         val info = WanNetwork.getInstance().getArticle(pageNum)
         val result:BaseResult<List<BaseArticleModel>> = BaseResult()
         if(info.errorCode == 0){

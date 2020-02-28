@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.wanandroid.MyApplication
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.processNextEventInCurrentThread
 
 
 /**
@@ -56,7 +57,7 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
 
     private fun requestData(){
         launch({
-
+            Log.e("launch",Thread.currentThread().name)
             var result = repository.requestData()
             isFirst = false
             dealWithResult(result)

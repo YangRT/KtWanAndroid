@@ -2,12 +2,11 @@ package com.example.wanandroid.data.network
 
 import android.util.Log
 import com.example.wanandroid.data.network.api.*
+import kotlinx.coroutines.*
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import kotlin.coroutines.resume
-import kotlin.coroutines.resumeWithException
-import kotlin.coroutines.suspendCoroutine
+import kotlin.coroutines.*
 
 class WanNetwork {
 
@@ -27,7 +26,7 @@ class WanNetwork {
     private val searchService:SearchService = ServiceCreator.create(SearchService::class.java)
     private val collectService:CollectService = ServiceCreator.create(CollectService::class.java)
     private val shareService:ShareService = ServiceCreator.create(ShareService::class.java)
-    private val exitService:ExitService = ServiceCreator.create(ExitService::class.java)
+    private val exitService:ExitService = ServiceCreator.createLogin(ExitService::class.java)
 
     suspend fun login(username:String,password:String) = loginService.getLoginInfo(username,password).await()
     suspend fun register(username:String,password:String,repassword:String) = registerService.getRegisterInfo(username,password,repassword).await()
@@ -45,7 +44,7 @@ class WanNetwork {
     suspend fun getNavigationInfo() = getNavigationService.getNavigationInfo().await()
     suspend fun getGzhList() = getGzhService.getGzhListInfo().await()
     suspend fun getGzhArticleById(page: Int,id: Int) = getGzhService.getGzhArticlesById(id,page).await()
-    suspend fun getShareArticle(page: Int) = getMyArticleService.getShareArticle(page).await()
+    suspend fun getShareArticle(page: Int) = withContext(Dispatchers.IO){getMyArticleService.getShareArticle(page).await()}
     suspend fun getCollectArticle(page: Int) = getMyArticleService.getCollectArticle(page).await()
     suspend fun getTodoList(page: Int,status:Int,type:Int?) = getTodoService.getTodoService(page,status,type).await()
     suspend fun getHotWord() = searchService.getHotWord().await()
@@ -58,6 +57,7 @@ class WanNetwork {
 
     private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->
+            Log.e("await",Thread.currentThread().name)
             enqueue(object : Callback<T> {
                 override fun onFailure(call: Call<T>, t: Throwable) {
                     t.printStackTrace()
@@ -65,6 +65,7 @@ class WanNetwork {
                 }
 
                 override fun onResponse(call: Call<T>, response: Response<T>) {
+                    Log.e("onResponse",Thread.currentThread().name)
                     val body = response.body()
                     if(response.isSuccessful){
                         Log.e("BaseOnResponse","isSuccessful");
@@ -94,4 +95,21 @@ class WanNetwork {
         }
 
     }
+
+    suspend fun test(){
+       val t = GlobalScope.launch (CoroutineName("777")){
+
+            //suspendCoroutine 这个方法并不是帮我们启动协程的，它运行在协程当中
+            // 并且帮我们获取到当前协程的 Continuation 实例，
+            // 也就是拿到回调，方便后面我们调用它的
+            // resume 或者 resumeWithException 来返回结果或者抛出异常
+            suspendCoroutine<String> {
+                continuation ->
+            continuation.resume("3333")
+        }}
+
+    }
+
+
+    
 }
