@@ -3,7 +3,6 @@ package com.example.wanandroid.data.network
 import android.util.Log
 import com.example.wanandroid.data.network.api.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ProducerScope
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -47,7 +46,6 @@ class WanNetwork {
     suspend fun getGzhArticleById(page: Int,id: Int) = withContext(Dispatchers.IO){ getGzhService.getGzhArticlesById(id,page).await() }
     suspend fun getShareArticle(page: Int) = withContext(Dispatchers.IO){ getMyArticleService.getShareArticle(page).await()}
     suspend fun getCollectArticle(page: Int) = withContext(Dispatchers.IO){getMyArticleService.getCollectArticle(page).await()}
-    suspend fun getTodoList(page: Int,status:Int,type:Int?) = withContext(Dispatchers.IO){getTodoService.getTodoService(page,status,type).await()}
     suspend fun getHotWord() = withContext(Dispatchers.IO){searchService.getHotWord().await()}
     suspend fun getSearchArticle(page:Int,key:String) = withContext(Dispatchers.IO){searchService.search(page,key).await()}
     suspend fun addCollect(id:Int) = withContext(Dispatchers.IO){collectService.addCollectArticle(id).await()}
@@ -55,6 +53,12 @@ class WanNetwork {
     suspend fun unCollectInMine(id: Int,originId:Int) = withContext(Dispatchers.IO){collectService.getUnCollectInMineResponse(id, originId).await()}
     suspend fun shareArticle(title:String,link:String) = withContext(Dispatchers.IO){shareService.getShareArticleResponse(title, link).await()}
     suspend fun exit() = withContext(Dispatchers.IO){exitService.getExitInfo().await()}
+
+    suspend fun getTodoList(page: Int,status:Int,type:Int?) = withContext(Dispatchers.IO){ getTodoService.getTodoList(page,status,type).await() }
+    suspend fun getDeleteTodoResponse(id:Int) = withContext(Dispatchers.IO){ getTodoService.getDeleteResponse(id).await() }
+    suspend fun getAddTodoResponse(title:String,content:String,type:Int,date:String) = withContext(Dispatchers.IO){ getTodoService.getAddEventResponse(title,content,date,type).await() }
+    suspend fun getChangeTodoStatusResponse(id:Int,status: Int) = withContext(Dispatchers.IO){ getTodoService.getChangeStatusResponse(id,status).await() }
+    suspend fun getUpdateTodoResponse(id:Int,title: String,content: String,type: Int,date: String) = withContext(Dispatchers.IO){ getTodoService.getUpdateEventResponse(id, title, content, date, type).await() }
 
     private suspend fun <T> Call<T>.await(): T {
         //suspendCoroutine 这个方法并不是帮我们启动协程的，它运行在协程当中

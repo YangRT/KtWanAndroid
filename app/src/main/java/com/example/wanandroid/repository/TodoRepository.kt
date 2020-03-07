@@ -100,12 +100,14 @@ class TodoRepository(val status:Int,val type:String):BaseMvvmRepository<List<Tod
         return result
     }
 
-    suspend fun deleteEvent(id:Int){
-
+    suspend fun deleteEvent(id:Int):Boolean{
+        val responseInfo = WanNetwork.getInstance().getDeleteTodoResponse(id)
+        return responseInfo.errorCode == 0
     }
 
-    suspend fun competeEvent(id:Int){
-
+    suspend fun competeEvent(id:Int):Boolean{
+        val responseInfo = WanNetwork.getInstance().getChangeTodoStatusResponse(id,1)
+        return responseInfo.errorCode==0
     }
 
     override fun getTClass(): Type? {

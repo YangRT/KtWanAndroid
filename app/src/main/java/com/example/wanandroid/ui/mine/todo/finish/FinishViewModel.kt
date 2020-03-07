@@ -2,12 +2,14 @@ package com.example.wanandroid.ui.mine.todo.finish
 
 import android.util.Log
 import android.widget.Toast
+import androidx.lifecycle.MutableLiveData
 import com.example.wanandroid.MyApplication
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseViewModel
 import com.example.wanandroid.base.PageStatus
 import com.example.wanandroid.data.model.TodoEvent
 import com.example.wanandroid.repository.TodoRepository
+import com.example.wanandroid.ui.mine.todo.ChangeRecord
 
 
 /**
@@ -22,8 +24,11 @@ import com.example.wanandroid.repository.TodoRepository
 
 class FinishViewModel:BaseViewModel<TodoEvent,TodoRepository>() {
 
+    var deleteResponse = MutableLiveData<ChangeRecord>()
+
     init {
         repository = TodoRepository(1,"finish")
+        //deleteResponse.value = ChangeRecord()
         isFirst = false
     }
 
@@ -46,5 +51,21 @@ class FinishViewModel:BaseViewModel<TodoEvent,TodoRepository>() {
         },{
             Toast.makeText(MyApplication.context,"网络错误！", Toast.LENGTH_SHORT).show()
         })
+    }
+
+    fun deleteEvent(id:Int,position:Int){
+        launch({
+            val result = repository.deleteEvent(id)
+            val record = ChangeRecord()
+            record.position = position
+            record.result = result
+            deleteResponse.postValue(record)
+        },{
+            val record = ChangeRecord()
+            record.position = position
+            record.result = false
+            deleteResponse.postValue(record)
+        })
+
     }
 }

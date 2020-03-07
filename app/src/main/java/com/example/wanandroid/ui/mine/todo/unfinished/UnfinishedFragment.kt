@@ -7,8 +7,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -20,10 +22,7 @@ import com.example.wanandroid.base.BaseStatusAdapter
 import com.example.wanandroid.data.model.TodoEvent
 import com.example.wanandroid.databinding.FragmentTodoBinding
 import com.example.wanandroid.repository.TodoRepository
-import com.example.wanandroid.ui.mine.todo.Event
-import com.example.wanandroid.ui.mine.todo.TodoAdapter
-import com.example.wanandroid.ui.mine.todo.TodoDetailActivity
-import com.example.wanandroid.ui.mine.todo.Type
+import com.example.wanandroid.ui.mine.todo.*
 
 
 /**
@@ -91,6 +90,16 @@ class UnfinishedFragment:BaseFragment<TodoEvent,TodoRepository,UnfinishedViewMod
         binding.statusLayout.setOnRefreshListener {
             viewModel().refresh()
         }
+        viewModel().competeResponse.observe(this, Observer {
+            if (it.position != -1){
+                competeResponse(it)
+            }
+        })
+        viewModel().deleteResponse.observe(this, Observer {
+            if (it.position != -1){
+                deleteResponse(it)
+            }
+        })
         adapter.loadMoreModule?.setOnLoadMoreListener {
             viewModel().loadNextPage()
         }
@@ -109,12 +118,13 @@ class UnfinishedFragment:BaseFragment<TodoEvent,TodoRepository,UnfinishedViewMod
             startActivity(intent)
         }
         adapter.setOnItemChildClickListener { adapter, view, position ->
+            val data = adapter.data[position] as TodoEvent
             when(view.id){
                 R.id.todo_item_finish ->{
-
+                    viewModel().competeEvent(data.id,position)
                 }
                 R.id.todo_item_delete ->{
-
+                    viewModel().deleteEvent(data.id,position)
                 }
             }
         }
@@ -154,5 +164,23 @@ class UnfinishedFragment:BaseFragment<TodoEvent,TodoRepository,UnfinishedViewMod
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
 
+    }
+
+    private fun deleteResponse(changeRecord: ChangeRecord){
+        if (changeRecord.result){
+            adapter.remove(changeRecord.position)
+            Toast.makeText(context,"删除成功！", Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(context,"删除失败！", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun competeResponse(changeRecord: ChangeRecord){
+        if (changeRecord.result){
+            adapter.remove(changeRecord.position)
+            Toast.makeText(context,"修改成功！",Toast.LENGTH_SHORT).show()
+        }else{
+            Toast.makeText(context,"修改失败！",Toast.LENGTH_SHORT).show()
+        }
     }
 }
