@@ -46,7 +46,7 @@ class ProjectFragment: BaseListFragment<BaseArticleModel, ProjectRepository, Pro
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
-        adapter.setNewData(data)
+        adapter.replaceData(data)
     }
 
 

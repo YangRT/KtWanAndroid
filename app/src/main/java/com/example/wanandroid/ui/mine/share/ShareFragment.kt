@@ -33,7 +33,7 @@ class ShareFragment:BaseListFragment<BaseArticleModel,ShareRepository,ShareViewM
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
-        adapter.setNewData(data)
+        adapter.replaceData(data)
     }
 
     override fun fragmentTag(): String {

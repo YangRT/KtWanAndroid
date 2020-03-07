@@ -35,7 +35,7 @@ class KIFragment(val cid:Int,val key:String):BaseLazyFragment<BaseArticleModel,K
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
         if (isResumed){
-            adapter.setNewData(data)
+            adapter.replaceData(data)
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.wanandroid.repository
 
+import android.util.Log
 import com.example.wanandroid.base.BaseMvvmRepository
 import com.example.wanandroid.base.BaseResult
 import com.example.wanandroid.data.model.TodoEvent
@@ -21,7 +22,8 @@ import java.lang.reflect.Type
 
 class TodoRepository(val status:Int,val type:String):BaseMvvmRepository<List<TodoEvent>>(true,type,null) {
 
-    private var lastType = 0
+    private var lastType = -1
+
     init {
         pageNum = 1
     }
@@ -60,6 +62,7 @@ class TodoRepository(val status:Int,val type:String):BaseMvvmRepository<List<Tod
     }
 
     private suspend fun loadType(type:Int):BaseResult<List<TodoEvent>>{
+        Log.e("unfinished","loadType-$type")
         val info:TodoEventInfo = if (type == 0){
             WanNetwork.getInstance().getTodoList(pageNum,status,null)
         }else{
@@ -85,6 +88,7 @@ class TodoRepository(val status:Int,val type:String):BaseMvvmRepository<List<Tod
         if (lastType != type){
             lastType = type
             pageNum = 1
+            isRefreshing = true
             result = loadType(type)
         }else{
             result.isFirst = true
@@ -94,6 +98,14 @@ class TodoRepository(val status:Int,val type:String):BaseMvvmRepository<List<Tod
         }
         result.isPaging = true
         return result
+    }
+
+    suspend fun deleteEvent(id:Int){
+
+    }
+
+    suspend fun competeEvent(id:Int){
+
     }
 
     override fun getTClass(): Type? {

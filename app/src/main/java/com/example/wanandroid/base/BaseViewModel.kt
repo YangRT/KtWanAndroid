@@ -88,7 +88,7 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
     }
 
     protected fun dealWithResult(result: BaseResult<List<D>>){
-        Log.e("BaseViewModel","result："+result.data.toString())
+        Log.e("BaseViewModel","result："+result.data.toString()+" "+result.isFirst)
         if(result.isEmpty){
             if (!result.isFromCache && result.msg != null){
                 Toast.makeText(MyApplication.context,result.msg,Toast.LENGTH_SHORT).show()
@@ -102,7 +102,8 @@ open class BaseViewModel<D,M:BaseMvvmRepository<List<D>>>:ViewModel(), Lifecycle
            }
        } else{
                if(result.isFirst){
-                    data.value?.clear()
+                   Log.e("BaseViewModel","clear")
+                   data.value?.clear()
                }
                result.data?.let { data.value?.addAll(it) }
                data.postValue(data.value)

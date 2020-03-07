@@ -24,6 +24,7 @@ class FinishViewModel:BaseViewModel<TodoEvent,TodoRepository>() {
 
     init {
         repository = TodoRepository(1,"finish")
+        isFirst = false
     }
 
     fun loadNextPage(){

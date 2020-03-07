@@ -22,7 +22,7 @@ class TabRepository(key:String):BaseMvvmRepository<List<TabTitleInfo>>(false,key
 
     override suspend fun load(): BaseResult<List<TabTitleInfo>> {
         val result:BaseResult<List<TabTitleInfo>> = BaseResult()
-        if(mCachedPreferenceKey == "gzh"){
+        if(mCachedPreferenceKey == "公众号文章"){
             val info = WanNetwork.getInstance().getGzhList()
             if (info.errorCode == 0){
                 val list = info.data

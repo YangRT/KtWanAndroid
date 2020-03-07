@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableArrayList
 import androidx.lifecycle.ViewModelProviders
@@ -15,10 +16,13 @@ import com.example.wanandroid.R
 import com.example.wanandroid.base.BaseFragment
 import com.example.wanandroid.base.BaseStatusAdapter
 import com.example.wanandroid.data.model.TodoEvent
+import com.example.wanandroid.data.model.TodoEventInfo
 import com.example.wanandroid.databinding.FragmentTodoBinding
 import com.example.wanandroid.repository.TodoRepository
+import com.example.wanandroid.ui.mine.todo.Event
 import com.example.wanandroid.ui.mine.todo.TodoAdapter
 import com.example.wanandroid.ui.mine.todo.TodoDetailActivity
+import com.example.wanandroid.ui.mine.todo.Type
 
 
 /**
@@ -31,7 +35,9 @@ import com.example.wanandroid.ui.mine.todo.TodoDetailActivity
  * @create: 2020-02-21 20:08
  **/
 
-class FinishFragment:BaseFragment<TodoEvent,TodoRepository,FinishViewModel,FragmentTodoBinding>() {
+class FinishFragment:BaseFragment<TodoEvent,TodoRepository,FinishViewModel,FragmentTodoBinding>(),
+    AdapterView.OnItemSelectedListener,View.OnClickListener {
+
 
     private lateinit var adapter:TodoAdapter
 
@@ -62,7 +68,7 @@ class FinishFragment:BaseFragment<TodoEvent,TodoRepository,FinishViewModel,Fragm
     }
 
     override fun dataInsert(data: ObservableArrayList<TodoEvent>) {
-        adapter.setNewData(data)
+        adapter.replaceData(data)
     }
 
     override fun refreshCancel() {
@@ -91,17 +97,59 @@ class FinishFragment:BaseFragment<TodoEvent,TodoRepository,FinishViewModel,Fragm
         adapter.loadMoreModule?.isEnableLoadMoreIfNotFullPage = false
         adapter.addChildClickViewIds(R.id.todo_item_delete)
         adapter.setOnItemClickListener { adapter, view, position ->
+            val data = adapter.data[position] as TodoEvent
             val intent = Intent(activity, TodoDetailActivity::class.java)
+            val e = Event()
+            e.title = data.title
+            e.content = data.content
+            e.date = data.dateStr
+            e.type = data.type
+            intent.putExtra("detail",e)
+            intent.putExtra("status","finish")
             startActivity(intent)
         }
         adapter.setOnItemChildClickListener { adapter, view, position ->
+            when(view.id){
+                R.id.todo_item_finish ->{
 
+                }
+                R.id.todo_item_delete ->{
+
+                }
+            }
         }
         binding.articleRecyclerView.adapter = adapter
         binding.articleRecyclerView.addItemDecoration( DividerItemDecoration(
             context, DividerItemDecoration.VERTICAL)
         )
-        viewModel().getCacheData()
+
+        binding.listSpinner.onItemSelectedListener = this
+        binding.todoToolbarAdd.setOnClickListener(this)
+        binding.todoToolbarBack.setOnClickListener(this)
     }
 
+    override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+        when (position){
+            0 -> viewModel().changeType(0)
+            Type.LIFE -> viewModel().changeType(Type.LIFE)
+            Type.WORK -> viewModel().changeType(Type.WORK)
+            Type.LEARN -> viewModel().changeType(Type.LEARN)
+            Type.OTHER -> viewModel().changeType(Type.OTHER)
+        }
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.todo_toolbar_back -> activity?.finish()
+            R.id.todo_toolbar_add -> {
+                val intent = Intent(activity,TodoDetailActivity::class.java)
+                intent.putExtra("status","add")
+                startActivity(intent)
+            }
+        }
+    }
+
+    override fun onNothingSelected(parent: AdapterView<*>?) {
+
+    }
 }

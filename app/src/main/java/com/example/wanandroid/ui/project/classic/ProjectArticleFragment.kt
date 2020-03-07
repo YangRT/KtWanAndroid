@@ -34,7 +34,7 @@ class ProjectArticleFragment(val cid:Int,val key:String):BaseLazyFragment<BaseAr
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
         if (isResumed){
-            adapter.setNewData(data)
+            adapter.replaceData(data)
         }
     }
 

@@ -34,7 +34,7 @@ class SquareFragment: BaseListFragment<BaseArticleModel, SquareRepository, Squar
     }
 
     override fun dataInsert(data: ObservableArrayList<BaseArticleModel>) {
-        adapter.setNewData(data)
+        adapter.replaceData(data)
     }
 
 

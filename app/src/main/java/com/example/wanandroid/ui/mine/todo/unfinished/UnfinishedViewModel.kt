@@ -23,6 +23,7 @@ class UnfinishedViewModel:BaseViewModel<TodoEvent,TodoRepository>() {
 
     init {
         repository = TodoRepository(0,"unfinished")
+        isFirst = false
     }
 
     fun loadNextPage(){

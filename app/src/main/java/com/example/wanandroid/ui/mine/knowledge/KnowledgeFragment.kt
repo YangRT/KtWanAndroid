@@ -40,7 +40,7 @@ class KnowledgeFragment:BaseFragment<KnowledgeData,KnowledgeRepository,Knowledge
     }
 
     override fun dataInsert(data: ObservableArrayList<KnowledgeData>) {
-        adapter.setNewData(data)
+        adapter.replaceData(data)
     }
 
     override fun refreshCancel() {

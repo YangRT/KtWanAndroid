@@ -49,7 +49,7 @@ class PointFragment:BaseFragment<PointDetail,PointRepository,PointViewModel,Frag
     }
 
     override fun dataInsert(data: ObservableArrayList<PointDetail>) {
-        adapter.setNewData(data)
+        adapter.replaceData(data)
     }
 
     override fun refreshCancel() {
